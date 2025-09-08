@@ -1,0 +1,412 @@
+/* COMPLETE CONTAINER RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+  /* Base font size that scales with viewport */
+  font-size: clamp(14px, 1.5vw, 18px);
+    scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Account for fixed navbar */
+}
+
+/* Enhanced scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #0891b2, #4f46e5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #06b6d4, #6366f1);
+}
+
+body {
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+}
+
+/* Page frame that actually centers and scales */
+.page-frame {
+  width: 100%; /* Remove fixed 100vw to inherit from body */
+  max-width: none; /* Remove max-width constraint for full sections */
+  margin: 0;
+  padding: 0; /* Remove padding to let sections handle it */
+  min-height: 100vh; /* Ensure it takes full height */
+}
+
+/* Responsive Typography */
+.hero-title { 
+  font-size: clamp(2rem, 8vw, 4.5rem) !important; 
+  line-height: 1.1 !important; 
+}
+
+.section-title { 
+  font-size: clamp(1.5rem, 5vw, 2.25rem) !important; 
+  line-height: 1.2 !important; 
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 3vw, 1.25rem) !important;
+}
+
+.hero-description,
+.body-text { 
+  font-size: clamp(0.875rem, 2.5vw, 1.125rem) !important; 
+  line-height: 1.6 !important;
+}
+
+/* Responsive Spacing */
+section {
+  padding: clamp(40px, 8vh, 80px) 0 !important;
+}
+
+.tech-stack {
+  gap: clamp(12px, 3vw, 24px) !important;
+}
+
+.cta-buttons {
+  gap: clamp(8px, 2vw, 16px) !important;
+}
+
+.about-grid {
+  gap: clamp(24px, 6vw, 48px) !important;
+}
+
+.projects-grid {
+  gap: clamp(16px, 4vw, 32px) !important;
+}
+
+/* Responsive Navigation */
+nav {
+  padding: clamp(8px, 2vw, 16px) 0 !important;
+}
+
+nav .logo {
+  font-size: clamp(1.25rem, 3vw, 1.5rem) !important;
+}
+
+nav .nav-link {
+  font-size: clamp(0.75rem, 2vw, 0.875rem) !important;
+  padding: clamp(4px, 1vw, 8px) 0 !important;
+}
+
+/* Responsive Buttons */
+.primary-button,
+.secondary-button {
+  padding: clamp(8px, 2vw, 12px) clamp(16px, 4vw, 32px) !important;
+  font-size: clamp(0.75rem, 2vw, 0.875rem) !important;
+}
+
+/* Responsive Project Cards */
+.project-card {
+  padding: clamp(16px, 3vw, 24px) !important;
+}
+
+.project-title {
+  font-size: clamp(1rem, 3vw, 1.125rem) !important;
+}
+
+.project-tech,
+.project-description {
+  font-size: clamp(0.75rem, 2vw, 0.875rem) !important;
+}
+
+/* Responsive Social Links */
+.social-icon {
+  width: clamp(48px, 10vw, 64px) !important;
+  height: clamp(48px, 10vw, 64px) !important;
+  padding: clamp(12px, 3vw, 16px) !important;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  .page-frame {
+    padding: 0 clamp(10px, 5vw, 15px);
+  }
+  
+  .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: clamp(16px, 4vw, 24px) !important;
+  }
+  
+  .nav-links {
+    display: none !important;
+  }
+  
+  .tech-stack {
+    justify-content: center !important;
+  }
+  
+  .cta-buttons {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  
+  .social-links {
+    gap: clamp(12px, 4vw, 20px) !important;
+  }
+  
+  .projects-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: clamp(20px, 5vw, 32px) !important;
+  }
+  
+  .projects-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  }
+}
+
+/* Large screen adjustments */
+@media (min-width: 1400px) {
+  .page-frame {
+    max-width: 1400px;
+  }
+}
+
+/* All your animations (unchanged) */
+@keyframes float {
+  0% { transform: translateY(0px) rotateX(0deg); }
+  100% { transform: translateY(-20px) rotateX(180deg); }
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  0% { transform: translateY(50px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% { transform: translate3d(-50%, 0, 0); }
+  40%, 43% { transform: translate3d(-50%, -30px, 0); }
+  70% { transform: translate3d(-50%, -15px, 0); }
+  90% { transform: translate3d(-50%, -4px, 0); }
+}
+
+.floating-cube {
+  animation: float 4s ease-in-out infinite alternate,
+             rotate 8s linear infinite,
+             pulse 2s ease-in-out infinite;
+}
+
+/* Hover effects */
+.tech-item:hover { transform: scale(1.1); }
+.tech-item:hover .tech-icon { color: #8b5cf6; }
+.button-primary:hover { box-shadow: 0 10px 25px rgba(6, 182, 212, 0.25); transform: scale(1.05); }
+.button-secondary:hover { background-color: #06b6d4; color: black; }
+.nav-link:hover { color: #06b6d4; }
+.project-card:hover { border-color: rgba(6, 182, 212, 0.4); box-shadow: 0 20px 40px rgba(6, 182, 212, 0.1); transform: scale(1.02); }
+.project-card:hover .project-title { color: #06b6d4; }
+.social-link:hover { transform: scale(1.1); }
+.social-link:hover .social-icon { border-color: #06b6d4; box-shadow: 0 10px 25px rgba(6, 182, 212, 0.25); }
+.full-width-button:hover { box-shadow: 0 10px 25px rgba(6, 182, 212, 0.25); transform: scale(1.05); }
+
+/* Enhanced Mobile Support */
+@media (max-width: 480px) {
+  .page-frame {
+    padding: 0 clamp(10px, 4vw, 15px) !important;
+  }
+  
+  .tech-stack {
+    gap: clamp(8px, 3vw, 12px) !important;
+  }
+  
+  .projects-grid {
+    grid-template-columns: 1fr !important;
+    gap: clamp(16px, 4vw, 20px) !important;
+  }
+}
+
+/* Tablet Portrait */
+@media (min-width: 481px) and (max-width: 768px) {
+  .projects-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  }
+}
+
+/* Small Laptops */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+  }
+}
+
+/* Theme-aware styles */
+.dark-theme {
+  background: linear-gradient(135deg, #000000 0%, #111827 50%, #000000 100%);
+  color: #ffffff;
+}
+
+.light-theme {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
+  color: #1e293b;
+}
+
+/* Update existing styles to use CSS variables */
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Update navigation styles */
+nav {
+  background: var(--bg-secondary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+/* Update card styles */
+.card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+/* Update project cards */
+.project-card {
+  background-color: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Update form inputs */
+input, textarea {
+  background-color: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Update text colors */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+}
+
+p {
+  color: var(--text-secondary);
+}
+
+/* Override specific elements */
+.hero-title {
+  color: transparent !important; /* Keep gradient text */
+}
+
+.section-title {
+  color: var(--accent-primary) !important;
+}
+
+/* Hero section theme support */
+.hero-section.dark {
+  background: linear-gradient(135deg, #000000 0%, #111827 50%, #000000 100%);
+  color: #ffffff;
+}
+
+.hero-section.light {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
+  color: #1e293b;
+}
+
+/* Ensure proper theme transitions */
+.hero-section, .prehero-section {
+  transition: background 0.3s ease, color 0.3s ease;
+}
+/* Mobile viewport fix */
+:root {
+  --vh: 1vh;
+}
+
+/* Enhanced mobile support */
+.prehero-section {
+  height: calc(var(--vh) * 100);
+  max-height: calc(var(--vh) * 100);
+  min-height: calc(var(--vh) * 100);
+  overflow: hidden;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .prehero-section {
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Loading spinner global styles */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(6, 182, 212, 0.3);
+  border-top: 3px solid #06b6d4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile viewport fix */
+:root {
+  --vh: 1vh;
+}
+
+/* Ensure proper section styling */
+.prehero-section {
+  height: calc(var(--vh) * 100) !important;
+  max-height: calc(var(--vh) * 100) !important;
+  min-height: calc(var(--vh) * 100) !important;
+  overflow: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .prehero-section {
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Prevent scrolling issues */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
