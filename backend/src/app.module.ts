@@ -1,8 +1,13 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import AdminJS from 'adminjs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import * as AdminJSTypeorm from '@adminjs/typeorm';
+import { PersonalInfo, Project, Skill, Experience, ContentBlock } from './modules/content/entities';
+
+AdminJS.registerAdapter({ Resource: AdminJSTypeorm.Resource, Database: AdminJSTypeorm.Database });
 
 @Module({
   imports: [
@@ -17,6 +22,13 @@ import { ConfigModule } from '@nestjs/config';
       entities: [], // Add your entity classes here
        synchronize: false, // MANDATORY for production!
     }),
+     AdminJSModule.createAdminAsync({
+       imports: [TypeOrmModule.forFeature([PersonalInfo, Project, Skill, Experience, ContentBlock])],
+      useFactory: () => ({
+        adminJsOptions: {
+          rootPath: '/admin',
+          resources: [PersonalInfo, Project, Skill, Experience, ContentBlock],
+     }),
   ],
   controllers: [AppController],
   providers: [AppService],
