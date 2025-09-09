@@ -16,13 +16,19 @@ AdminJS.registerAdapter({ Database, Resource });
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Initialize AdminJS
+  // ✅ ADD THIS: Enable CORS for your frontend
+  app.enableCors({
+    origin: ['http://localhost:5173'], // Your React app URL
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+
+  // Your existing AdminJS setup...
   const adminJs = new AdminJS({
     rootPath: '/admin',
     resources: [Profile, Project, Skill, Experience, ContentBlock],
   });
 
-  // Build AdminJS router with Express
   const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
     adminJs,
     {
@@ -43,10 +49,11 @@ async function bootstrap() {
     }
   );
 
-  // Add AdminJS router to Express app
   app.use(adminJs.options.rootPath, adminRouter);
 
   await app.listen(3000);
+  console.log('Backend running on: http://localhost:3000');
   console.log('AdminJS available at http://localhost:3000/admin');
+  console.log('API available at http://localhost:3000/api/*');
 }
 bootstrap();

@@ -2,9 +2,10 @@ import React, { Suspense, useState, useCallback, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import Lanyard from '../../components/3D/Lanyard/Lanyard';
+import { apiService } from '../../services/api'; // ✅ Import API service
 import './PreHero.css';
 
-// Simple Loading Component
+// Keep all your existing components unchanged
 const LoadingSpinner = () => (
   <div className="loading-container">
     <div className="loading-spinner" />
@@ -12,7 +13,6 @@ const LoadingSpinner = () => (
   </div>
 );
 
-// WebGL Error Fallback
 const WebGLErrorFallback = ({ onRetry, isDarkMode }) => (
   <div className={`webgl-error ${isDarkMode ? 'dark' : 'light'}`}>
     <div className="error-content">
@@ -28,7 +28,6 @@ const WebGLErrorFallback = ({ onRetry, isDarkMode }) => (
   </div>
 );
 
-// Simple Error Boundary
 class SimpleErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -42,7 +41,6 @@ class SimpleErrorBoundary extends React.Component {
   componentDidCatch(error, errorInfo) {
     console.error('PreHero Error:', error, errorInfo);
     
-    // Auto-retry once for WebGL context issues
     if (this.state.errorCount < 1) {
       setTimeout(() => {
         this.setState({ hasError: false, errorCount: this.state.errorCount + 1 });
@@ -70,10 +68,39 @@ class SimpleErrorBoundary extends React.Component {
 
 const PreHero = ({ onScrollToNext }) => {
   const { isDarkMode } = useTheme();
+  
+  // ✅ Add state for profile data
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
+  // Keep existing state
   const [lanyardKey, setLanyardKey] = useState(0);
   const [showFallback, setShowFallback] = useState(false);
 
-  // Handle viewport height for mobile
+  // ✅ Fetch profile data on component mount
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await apiService.get('/api/profile');
+        if (response.success) {
+          setProfile(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to load profile:', error);
+        // Fallback data
+        setProfile({
+          name: 'Portfolio Owner',
+          title: 'Developer'
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  // Keep all existing viewport logic
   useEffect(() => {
     const setVH = () => {
       const vh = window.innerHeight * 0.01;
@@ -90,8 +117,8 @@ const PreHero = ({ onScrollToNext }) => {
     };
   }, []);
 
+  // Keep all existing handlers unchanged
   const handleEnterPortfolio = useCallback(() => {
-    // Direct navigation without transition state
     const heroSection = document.getElementById('hero');
     if (heroSection) {
       heroSection.scrollIntoView({ 
@@ -100,7 +127,6 @@ const PreHero = ({ onScrollToNext }) => {
       });
     }
     
-    // Call parent callback if provided
     if (onScrollToNext) {
       onScrollToNext('hero');
     }
@@ -117,9 +143,22 @@ const PreHero = ({ onScrollToNext }) => {
     setShowFallback(true);
   }, []);
 
+  // ✅ Show loading state
+  if (loading) {
+    return (
+      <section className={`prehero-section ${isDarkMode ? 'dark' : 'light'}`}>
+        <div className="content-layer">
+          <div className="welcome-text">
+            <div>Loading...</div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="prehero" className={`prehero-section ${isDarkMode ? 'dark' : 'light'}`}>
-      {/* 3D Canvas Layer */}
+      {/* Keep all existing 3D Canvas Layer unchanged */}
       <div className="canvas-layer">
         {!showFallback ? (
           <SimpleErrorBoundary 
@@ -144,22 +183,22 @@ const PreHero = ({ onScrollToNext }) => {
         )}
       </div>
 
-      {/* Content Layer */}
+      {/* Content Layer with dynamic data */}
       <div className="content-layer">
-        {/* Welcome Text */}
         <div className="welcome-text">
+          {/* ✅ Use dynamic data instead of hardcoded text */}
           <h1 className="main-title">
-            Osama Khaled Gamal
+            {profile?.name}
           </h1>
           <h2 className={`subtitle ${isDarkMode ? 'dark' : 'light'}`}>
-            Backend Engineer Portfolio
+            {profile?.title} Portfolio
           </h2>
           <p className="instruction">
-            Interact with the 3D badge above
+            Interact with the 3D badge 
           </p>
         </div>
 
-        {/* Enter Button */}
+        {/* Keep existing enter button unchanged */}
         <div className="enter-button-container">
           <button
             className={`enter-button ${isDarkMode ? 'dark' : 'light'}`}
