@@ -3,7 +3,7 @@ import { AppModule } from './app.module.js';
 import AdminJS from 'adminjs';
 import { Database, Resource } from '@adminjs/typeorm';
 import AdminJSExpress from '@adminjs/express';
-import { PersonalInfo } from './modules/content/entities/personal-info.entity.js';
+import { Profile } from './modules/content/entities/profile.entity.js';
 import { Project } from './modules/content/entities/project.entity.js';
 import { Skill } from './modules/content/entities/skill.entity.js';
 import { Experience } from './modules/content/entities/experience.entity.js';
@@ -19,7 +19,7 @@ async function bootstrap() {
   // Initialize AdminJS
   const adminJs = new AdminJS({
     rootPath: '/admin',
-    resources: [PersonalInfo, Project, Skill, Experience, ContentBlock],
+    resources: [Profile, Project, Skill, Experience, ContentBlock],
   });
 
   // Build AdminJS router with Express

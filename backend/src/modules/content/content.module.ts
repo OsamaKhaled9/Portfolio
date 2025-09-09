@@ -1,12 +1,16 @@
 // src/modules/content/content.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PersonalInfo, Project, Skill, Experience, ContentBlock } from './entities/index.js' ; 
+import { Profile } from './entities/profile.entity.js';
+import { ProfileController } from './controllers/profile.controller.js';
+import { ProfileService } from './services/profile.service.js';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PersonalInfo, Project, Skill, Experience, ContentBlock])
+    TypeOrmModule.forFeature([Profile]),
   ],
-  // Add controllers and services later
+  controllers: [ProfileController],
+  providers: [ProfileService],
+  exports: [ProfileService],
 })
 export class ContentModule {}

@@ -3,14 +3,15 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
-import { PersonalInfo } from './modules/content/entities/personal-info.entity.js';
+import { Profile } from './modules/content/entities/profile.entity.js';
 import { Project } from './modules/content/entities/project.entity.js';
 import { Skill } from './modules/content/entities/skill.entity.js';
 import { Experience } from './modules/content/entities/experience.entity.js';
 import { ContentBlock } from './modules/content/entities/content-block.entity.js';
 import AdminJS from 'adminjs';
 import * as AdminJSTypeorm from '@adminjs/typeorm';
-
+import { ContentModule } from './modules/content/content.module.js';
+import { AuthModule } from './modules/auth/auth.module.js';
 AdminJS.registerAdapter({
   Resource: AdminJSTypeorm.Resource,
   Database: AdminJSTypeorm.Database,
@@ -26,14 +27,16 @@ AdminJS.registerAdapter({
       username: process.env.DB_USERNAME || 'root',
       password: process.env.DB_PASSWORD || '',
       database: process.env.DB_DATABASE || 'portfiodb',
-      entities: [PersonalInfo, Project, Skill, Experience, ContentBlock],
+      entities: [Profile, Project, Skill, Experience, ContentBlock],
       synchronize: true, // Set to false in production
     }),
+     ContentModule,  // This contains ProfileController
+      AuthModule,     // This contains AuthController
     import('@adminjs/nestjs').then(({ AdminModule }) => AdminModule.createAdminAsync({
       useFactory: () => ({
         adminJsOptions: {
           rootPath: '/admin',
-          resources: [PersonalInfo, Project, Skill, Experience, ContentBlock],
+          resources: [Profile, Project, Skill, Experience, ContentBlock],
         },
         auth: {
           authenticate: async (email: string, password: string) => {
