@@ -12,6 +12,7 @@ import AdminJS from 'adminjs';
 import * as AdminJSTypeorm from '@adminjs/typeorm';
 import { ContentModule } from './modules/content/content.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
+
 AdminJS.registerAdapter({
   Resource: AdminJSTypeorm.Resource,
   Database: AdminJSTypeorm.Database,
@@ -26,12 +27,26 @@ AdminJS.registerAdapter({
       port: parseInt(process.env.DB_PORT || '3306', 10),
       username: process.env.DB_USERNAME || 'root',
       password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_DATABASE || 'portfiodb',
+      database: process.env.DB_DATABASE || 'PortfolioDB',
       entities: [Profile, Project, Skill, Experience, ContentBlock],
-      synchronize: true, // Set to false in production
+      
+      // ✅ DEVELOPMENT SETTINGS (preserves data while updating schema)
+      synchronize: false,
+      logging: process.env.NODE_ENV === 'development' ? ['query', 'error'] : ['error'],
+      dropSchema: false, // ✅ CRITICAL: Never drop schema
+      
+      // ✅ CONNECTION STABILITY
+      retryAttempts: 3,
+      retryDelay: 3000,
+      autoLoadEntities: true,
+      
+      // ✅ MIGRATION SUPPORT (for production)
+      migrations: ['dist/migrations/*.js'],
+      migrationsTableName: 'migrations',
+      migrationsRun: false, // Don't auto-run migrations
     }),
-     ContentModule,  // This contains ProfileController
-      AuthModule,     // This contains AuthController
+    ContentModule,
+    AuthModule,
     import('@adminjs/nestjs').then(({ AdminModule }) => AdminModule.createAdminAsync({
       useFactory: () => ({
         adminJsOptions: {
