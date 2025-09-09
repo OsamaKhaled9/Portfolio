@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 @Entity()
 export class Project extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -7,7 +7,7 @@ export class Project extends BaseEntity {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ type: 'text' })
   description: string;
 
   @Column({ nullable: true })
@@ -21,4 +21,16 @@ export class Project extends BaseEntity {
 
   @Column({ default: false })
   featured: boolean;
+
+  @Column({ type: 'simple-array', nullable: true })
+  techStack?: string[];
+
+  @Column({ default: 'active' })
+  status: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
