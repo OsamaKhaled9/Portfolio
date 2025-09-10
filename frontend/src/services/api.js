@@ -66,6 +66,9 @@ async getExperience() {
   return this.get('/api/experience');
 }
 
+async getProjects() {
+  return this.get('/api/projects');
+}
 
 }
 

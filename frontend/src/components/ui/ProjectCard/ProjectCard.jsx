@@ -12,10 +12,25 @@ const ProjectCard = ({ project, onViewDetails, onViewCode }) => {
     }
   };
 
+  const handleCardClick = (e) => {
+    // Don't open modal if clicking on GitHub button or any button/link
+    if (e.target.closest('button') || e.target.closest('a')) {
+      return;
+    }
+    onViewDetails(project);
+  };
+
   const statusColor = getStatusColor(status);
 
   return (
-    <div className="project-card" style={projectCardStyles.card}>
+    <div 
+      className="project-card" 
+      style={{
+        ...projectCardStyles.card,
+        cursor: 'pointer'  // ADD THIS - makes card show pointer cursor
+      }}
+      onClick={handleCardClick}  // ADD THIS - enables click to open modal
+    >
       <div style={projectCardStyles.header}>
         <h3 className="project-title" style={projectCardStyles.title}>{title}</h3>
         <span style={{

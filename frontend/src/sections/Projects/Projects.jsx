@@ -1,11 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProjectCard from '../../components/ui/ProjectCard/ProjectCard.jsx';
 import { projectsStyles } from './Projects.styles';
 import { projects } from '../../data/projects';
+import { apiService } from '../../services/api';
 
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Add dynamic data state
+  const [dynamicProjects, setDynamicProjects] = useState(projects);
+  const [loading, setLoading] = useState(true);
+
+  // Transform API projects to match your current structure
+  const transformProjects = (apiProjects) => {
+    return apiProjects.map(project => ({
+      id: project.id,
+      title: project.title,
+      description: project.description,
+      tech: project.techStack || [], // API uses techStack, you use tech
+      image: project.imageUrl || '/default-project.png',
+      links: {
+        github: project.githubUrl,
+        demo: project.liveUrl
+      },
+      featured: project.featured || false,
+      status: project.status,
+      // Keep any additional fields your static data might have
+      grade: null // Add this if some projects have grades in your static data
+    }));
+  };
+
+  // Fetch projects from API
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await apiService.getProjects();
+        const apiProjects = response.data;
+        
+        if (apiProjects && apiProjects.length > 0) {
+          const transformed = transformProjects(apiProjects);
+          setDynamicProjects(transformed);
+        }
+        // If no API data, keep static fallback
+        
+      } catch (error) {
+        console.error('Failed to fetch projects:', error);
+        // Keep static data as fallback
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const handleViewDetails = (project) => {
     console.log('Opening modal for:', project.title); // Debug log
@@ -37,7 +85,7 @@ const Projects = () => {
           </div>
           
           <div style={projectsStyles.grid}>
-            {projects.map((project) => (
+            {dynamicProjects.map((project) => (
               <ProjectCard
                 key={project.id}
                 project={project}
@@ -49,7 +97,7 @@ const Projects = () => {
         </div>
       </section>
 
-      {/* Simple Modal */}
+      {/* Simple Modal - EXACT SAME AS BEFORE */}
       {isModalOpen && selectedProject && (
         <div
           style={{

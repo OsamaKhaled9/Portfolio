@@ -31,7 +31,7 @@ AdminJS.registerAdapter({
       entities: [Profile, Project, Skill, Experience, ContentBlock],
       
       // ✅ DEVELOPMENT SETTINGS (preserves data while updating schema)
-      synchronize: true,
+      synchronize: false,
       logging: process.env.NODE_ENV === 'development' ? ['query', 'error'] : ['error'],
       dropSchema: false, // ✅ CRITICAL: Never drop schema
       
