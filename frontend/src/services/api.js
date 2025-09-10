@@ -54,6 +54,19 @@ class ApiService {
       method: 'DELETE'
     });
   }
+  async getProfile() {
+  return this.get('/api/profile');
+}
+
+async getSkills() {
+  return this.get('/api/skills');
+}
+
+async getExperience() {
+  return this.get('/api/experience');
+}
+
+
 }
 
 export const apiService = new ApiService();

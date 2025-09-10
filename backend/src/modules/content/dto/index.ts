@@ -2,3 +2,8 @@ export * from './update-profile.dto.js';
 export * from './profile-response.dto.js';
 //export * from './portfolio-response.dto.js';
 export * from './create-project.dto.js';
+export * from './update-project.dto.js';
+export * from './create-skill.dto.js';
+export * from './update-skill.dto.js';
+export * from './create-experience.dto.js';
+export * from './update-experience.dto.js';
