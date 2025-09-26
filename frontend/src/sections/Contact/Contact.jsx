@@ -1,109 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import { Github, Linkedin, Mail, Phone } from 'lucide-react';
+import { Github, Linkedin, Mail, Phone, MessageSquare, X } from 'lucide-react';
 import { contactStyles } from './Contact.styles';
 import { personalInfo } from '../../data/personal';
 import { apiService } from '../../services/api';
 import { contactService } from '../../services/contactService';
 
 const Contact = () => {
-  // State for dynamic contact data (unchanged)
-  const [contactData, setContactData] = useState({
-    email: personalInfo.email,
-    phone: personalInfo.phone,
-    linkedin: personalInfo.linkedin,  
-    github: personalInfo.github,
-    resumeUrl: personalInfo.resumeUrl,
-    socialLinks: personalInfo.socialLinks || {},
-    loading: true
-  });
-
-  // Form state
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
+  // Combined state management
+  const [contactData, setContactData] = useState({ ...personalInfo, loading: true });
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
-  // Transform API profile data (unchanged)
-  const transformContactData = (profileData) => {
-    const socialLinks = profileData.socialLinks || {};
-    
-    return {
-      email: profileData.email,
-      phone: profileData.phone,
-      location: profileData.location,
-      linkedin: socialLinks.linkedin || personalInfo.linkedin,
-      github: socialLinks.github ? socialLinks.github.replace('https://github.com/', '') : personalInfo.github,
-      resumeUrl: profileData.resumeUrl,
-      socialLinks: socialLinks,
-      loading: false
-    };
-  };
-
-  // Fetch contact data (unchanged)
+  // Fetch contact data
   useEffect(() => {
     const fetchContactData = async () => {
       try {
         const response = await apiService.getProfile();
-        const profileData = response.data;
-        
-        if (profileData) {
-          const transformedData = transformContactData(profileData);
-          setContactData(transformedData);
+        if (response?.data) {
+          const { socialLinks = {} } = response.data;
+          setContactData({
+            ...response.data,
+            linkedin: socialLinks.linkedin || personalInfo.linkedin,
+            github: socialLinks.github?.replace('https://github.com/', '') || personalInfo.github,
+            loading: false
+          });
         }
-        
       } catch (error) {
         console.error('Failed to fetch contact data:', error);
-        setContactData({
-          ...personalInfo,
-          loading: false
-        });
+        setContactData({ ...personalInfo, loading: false });
       }
     };
-
     fetchContactData();
   }, []);
 
-  // Social links array (unchanged)
+  // Drawer effects (escape key + body scroll)
+  useEffect(() => {
+    const handleEscape = (e) => e.key === 'Escape' && isDrawerOpen && setIsDrawerOpen(false);
+    document.addEventListener('keydown', handleEscape);
+    document.body.style.overflow = isDrawerOpen ? 'hidden' : 'unset';
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isDrawerOpen]);
+
+  // Create social links
   const socialLinks = [
-    { 
-      icon: <Github size={24} />, 
-      label: "GitHub", 
-      href: contactData.github ? `https://github.com/${contactData.github}` : null
-    },
-    { 
-      icon: <Linkedin size={24} />, 
-      label: "LinkedIn", 
-      href: contactData.linkedin
-    },
-    { 
-      icon: <Mail size={24} />, 
-      label: "Email", 
-      href: contactData.email ? `mailto:${contactData.email}` : null
-    },
-    { 
-      icon: <Phone size={24} />, 
-      label: "Phone", 
-      href: contactData.phone ? `tel:${contactData.phone}` : null
-    }
+    { icon: <Github size={32} />, label: "GitHub", href: contactData.github && `https://github.com/${contactData.github}` },
+    { icon: <Linkedin size={32} />, label: "LinkedIn", href: contactData.linkedin },
+    { icon: <Mail size={32} />, label: "Email", href: contactData.email && `mailto:${contactData.email}` },
+    { icon: <Phone size={32} />, label: "Phone", href: contactData.phone && `tel:${contactData.phone}` }
   ].filter(link => link.href);
 
-  const handleDownloadResume = () => {
-    console.log('Download resume');
-    if (contactData.resumeUrl) {
-      window.open(contactData.resumeUrl, '_blank');
-    }
-  };
-
   // Form handlers
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
+  const handleInputChange = (e) => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -114,6 +67,7 @@ const Contact = () => {
       if (response.success) {
         setSubmitStatus({ type: 'success', message: response.message || 'Your message has been sent successfully!' });
         setFormData({ name: '', email: '', subject: '', message: '' });
+        setTimeout(() => { setIsDrawerOpen(false); setSubmitStatus(null); }, 2000);
       } else {
         setSubmitStatus({ type: 'error', message: response.message || 'Failed to send message. Please try again.' });
       }
@@ -124,331 +78,296 @@ const Contact = () => {
     }
   };
 
-  return (
-    <section id="contact" style={contactStyles.section}>
-      <div style={contactStyles.container}>
-        <h2 style={contactStyles.title}>Let's Connect</h2>
-        <p style={contactStyles.description}>
-          I'm actively seeking opportunities in backend development, cloud engineering, and AI systems. 
-          Let's discuss how we can work together on innovative projects.
-        </p>
-        
-        {/* Creative Grid Layout */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-          gap: '48px',
-          alignItems: 'start',
-          marginBottom: '48px'
-        }}>
-          
-          {/* Left Card - Social Links & Resume */}
-          <div style={{
-            background: 'linear-gradient(145deg, #1f2937, #111827)',
-            borderRadius: '20px',
-            padding: '40px',
-            border: '1px solid #374151',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-            transition: 'all 0.3s ease',
-            ':hover': {
-              transform: 'translateY(-5px)',
-              boxShadow: '0 20px 40px rgba(6, 182, 212, 0.1)'
-            }
-          }}>
-            <h3 style={{
-              color: '#06b6d4',
-              fontSize: '24px',
-              marginBottom: '24px',
-              fontFamily: 'Monaco, "Lucida Console", monospace',
-              textAlign: 'center'
-            }}>Connect With Me</h3>
-            
-            {/* Social Links in 2x2 Grid */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '20px',
-              marginBottom: '32px'
-            }}>
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '20px',
-                    backgroundColor: '#374151',
-                    borderRadius: '12px',
-                    color: '#9ca3af',
-                    textDecoration: 'none',
-                    transition: 'all 0.3s ease',
-                    border: '1px solid transparent'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#06b6d4';
-                    e.currentTarget.style.color = '#000';
-                    e.currentTarget.style.transform = 'translateY(-3px)';
-                    e.currentTarget.style.borderColor = '#06b6d4';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#374151';
-                    e.currentTarget.style.color = '#9ca3af';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.borderColor = 'transparent';
-                  }}
-                >
-                  {social.icon}
-                  <span style={{
-                    fontSize: '12px',
-                    fontFamily: 'Monaco, "Lucida Console", monospace',
-                    fontWeight: 'bold'
-                  }}>{social.label}</span>
-                </a>
-              ))}
-            </div>
+  // Reusable styles
+  const inputStyle = {
+    width: '100%',
+    padding: '12px',
+    borderRadius: '8px',
+    border: '1px solid var(--border-color, #374151)',
+    backgroundColor: 'var(--input-bg, #111827)',
+    color: 'var(--text-primary, #f3f4f6)',
+    fontSize: '14px',
+    fontFamily: 'Monaco, "Lucida Console", monospace',
+    outline: 'none',
+    transition: 'border-color 0.2s ease'
+  };
 
-            {/* Resume Button */}
-            {contactData.resumeUrl && (
-              <button 
-                onClick={handleDownloadResume}
-                style={{
-                  width: '100%',
-                  padding: '16px',
-                  background: 'linear-gradient(135deg, #06b6d4, #8b5cf6)',
-                  color: 'white',
-                  fontFamily: 'Monaco, "Lucida Console", monospace',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  borderRadius: '12px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(6, 182, 212, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(6, 182, 212, 0.3)';
-                }}
-              >
-                📄 Download Resume
-              </button>
-            )}
+  const labelStyle = {
+    display: 'block',
+    marginBottom: '8px',
+    fontSize: '14px',
+    fontWeight: '500',
+    color: 'var(--text-primary, #f3f4f6)',
+    fontFamily: 'Monaco, "Lucida Console", monospace'
+  };
+
+  const buttonHoverEffect = (e, isEnter) => {
+    if (isEnter) {
+      e.currentTarget.style.transform = 'translateY(-2px)';
+      e.currentTarget.style.boxShadow = '0 8px 25px rgba(6, 182, 212, 0.4)';
+    } else {
+      e.currentTarget.style.transform = 'translateY(0)';
+      e.currentTarget.style.boxShadow = '0 4px 15px rgba(6, 182, 212, 0.3)';
+    }
+  };
+
+  const focusEffect = (e, isFocus) => {
+    if (isFocus) {
+      e.currentTarget.style.borderColor = '#06b6d4';
+      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(6, 182, 212, 0.1)';
+    } else {
+      e.currentTarget.style.borderColor = 'var(--border-color, #374151)';
+      e.currentTarget.style.boxShadow = 'none';
+    }
+  };
+
+  return (
+    <>
+      <section id="contact" style={contactStyles.section}>
+        <div style={contactStyles.container}>
+          <h2 style={contactStyles.title}>Let's Connect</h2>
+          <p style={contactStyles.description}>
+            I'm actively seeking opportunities in backend development, cloud engineering, and AI systems. 
+            Let's discuss how we can work together on innovative projects.
+          </p>
+          
+          <div style={contactStyles.socialLinks}>
+            {socialLinks.map((social, index) => (
+              <a key={index} href={social.href} style={contactStyles.socialLink} target="_blank" rel="noopener noreferrer">
+                <div style={contactStyles.socialIcon}>{social.icon}</div>
+                <span style={contactStyles.socialLabel}>{social.label}</span>
+              </a>
+            ))}
+          </div>
+          
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <button
+              onClick={() => setIsDrawerOpen(true)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '16px 32px',
+                background: 'linear-gradient(135deg, #06b6d4, #8b5cf6)',
+                color: 'white',
+                fontFamily: 'Monaco, "Lucida Console", monospace',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                borderRadius: '12px',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)'
+              }}
+              onMouseEnter={(e) => buttonHoverEffect(e, true)}
+              onMouseLeave={(e) => buttonHoverEffect(e, false)}
+            >
+              <MessageSquare size={20} />
+              Send Me a Message
+            </button>
           </div>
 
-          {/* Right Card - Contact Form */}
-          <div 
+          {contactData.resumeUrl && (
+            <div style={contactStyles.resumeButton}>
+              <button onClick={() => window.open(contactData.resumeUrl, '_blank')} style={contactStyles.downloadButton}>
+                Download Resume
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Drawer Overlay */}
+      {isDrawerOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 50,
+            transition: 'opacity 0.3s ease'
+          }}
+          onClick={() => setIsDrawerOpen(false)}
+        />
+      )}
+
+      {/* Contact Drawer */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          zIndex: 60,
+          height: '100vh',
+          width: '400px',
+          maxWidth: '90vw',
+          backgroundColor: 'var(--bg-primary, #1f2937)',
+          transform: isDrawerOpen ? 'translateX(0)' : 'translateX(100%)',
+          transition: 'transform 0.3s ease',
+          overflowY: 'auto',
+          boxShadow: '-10px 0 25px rgba(0, 0, 0, 0.3)',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '24px',
+          borderBottom: '1px solid var(--border-color, #374151)',
+          backgroundColor: 'var(--bg-secondary, #111827)'
+        }}>
+          <h3 style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            color: 'var(--text-primary, #06b6d4)',
+            fontSize: '18px',
+            fontFamily: 'Monaco, "Lucida Console", monospace',
+            margin: 0,
+            textTransform: 'uppercase',
+            fontWeight: 'bold'
+          }}>
+            <Mail size={20} />
+            Contact Me
+          </h3>
+          
+          <button
+            onClick={() => setIsDrawerOpen(false)}
             style={{
-              backgroundImage: 'linear-gradient(163deg, #06b6d4 0%, #8b5cf6 100%)',
-              borderRadius: '22px',
-              padding: '3px',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 10px 30px rgba(6, 182, 212, 0.2)'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '32px',
+              height: '32px',
+              borderRadius: '8px',
+              border: 'none',
+              backgroundColor: 'transparent',
+              color: 'var(--text-secondary, #9ca3af)',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = '0 20px 40px rgba(6, 182, 212, 0.4)';
-              e.currentTarget.style.transform = 'translateY(-5px)';
+              e.currentTarget.style.backgroundColor = 'var(--hover-bg, #374151)';
+              e.currentTarget.style.color = 'var(--text-primary, #f3f4f6)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = '0 10px 30px rgba(6, 182, 212, 0.2)';
-              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = 'var(--text-secondary, #9ca3af)';
             }}
           >
-            <div 
-              style={{
-                backgroundColor: '#1f2937',
-                borderRadius: '20px',
-                padding: '40px',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <h3 style={{
-                textAlign: 'center',
-                margin: '0 0 32px',
-                color: '#06b6d4',
-                fontSize: '24px',
-                fontFamily: 'Monaco, "Lucida Console", monospace'
-              }}>Send Message</h3>
+            <X size={18} />
+          </button>
+        </div>
 
-              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {/* Name & Email in one row */}
-                <div style={{ display: 'flex', gap: '16px' }}>
-                  <div style={{
-                    flex: 1,
-                    backgroundColor: '#111827',
-                    borderRadius: '12px',
-                    padding: '16px',
-                    border: '1px solid #374151',
-                    transition: 'all 0.3s ease'
-                  }}>
-                    <input
-                      required
-                      placeholder="Your Name"
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        outline: 'none',
-                        width: '100%',
-                        color: '#f3f4f6',
-                        fontSize: '14px',
-                        fontFamily: 'Monaco, "Lucida Console", monospace'
-                      }}
-                    />
-                  </div>
-                  
-                  <div style={{
-                    flex: 1,
-                    backgroundColor: '#111827',
-                    borderRadius: '12px',
-                    padding: '16px',
-                    border: '1px solid #374151',
-                    transition: 'all 0.3s ease'
-                  }}>
-                    <input
-                      required
-                      placeholder="your@email.com"
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        outline: 'none',
-                        width: '100%',
-                        color: '#f3f4f6',
-                        fontSize: '14px',
-                        fontFamily: 'Monaco, "Lucida Console", monospace'
-                      }}
-                    />
-                  </div>
-                </div>
+        {/* Form Content */}
+        <div style={{ flex: 1, padding: '24px' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {[
+              { name: 'name', label: 'Your Name *', type: 'text', placeholder: 'John Doe', required: true },
+              { name: 'email', label: 'Your Email *', type: 'email', placeholder: 'john@example.com', required: true },
+              { name: 'subject', label: 'Subject', type: 'text', placeholder: 'Let me know how I can help you', required: false }
+            ].map((field) => (
+              <div key={field.name}>
+                <label style={labelStyle}>{field.label}</label>
+                <input
+                  required={field.required}
+                  type={field.type}
+                  name={field.name}
+                  value={formData[field.name]}
+                  onChange={handleInputChange}
+                  placeholder={field.placeholder}
+                  style={inputStyle}
+                  onFocus={(e) => focusEffect(e, true)}
+                  onBlur={(e) => focusEffect(e, false)}
+                />
+              </div>
+            ))}
 
-                {/* Subject */}
-                <div style={{
-                  backgroundColor: '#111827',
-                  borderRadius: '12px',
-                  padding: '16px',
-                  border: '1px solid #374151'
-                }}>
-                  <input
-                    placeholder="Subject (Optional)"
-                    type="text"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      outline: 'none',
-                      width: '100%',
-                      color: '#f3f4f6',
-                      fontSize: '14px',
-                      fontFamily: 'Monaco, "Lucida Console", monospace'
-                    }}
-                  />
-                </div>
-
-                {/* Message */}
-                <div style={{
-                  backgroundColor: '#111827',
-                  borderRadius: '12px',
-                  padding: '16px',
-                  border: '1px solid #374151'
-                }}>
-                  <textarea
-                    required
-                    placeholder="Your message here..."
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    rows={4}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      outline: 'none',
-                      width: '100%',
-                      color: '#f3f4f6',
-                      resize: 'none',
-                      fontSize: '14px',
-                      fontFamily: 'Monaco, "Lucida Console", monospace'
-                    }}
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  style={{
-                    padding: '16px',
-                    borderRadius: '12px',
-                    border: 'none',
-                    background: isSubmitting ? '#374151' : 'transparent',
-                    color: isSubmitting ? '#9ca3af' : '#06b6d4',
-                    fontWeight: 'bold',
-                    fontSize: '16px',
-                    cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.3s ease',
-                    fontFamily: 'Monaco, "Lucida Console", monospace',
-                    border: '2px solid #06b6d4',
-                    marginTop: '8px'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isSubmitting) {
-                      e.currentTarget.style.backgroundColor = '#06b6d4';
-                      e.currentTarget.style.color = '#000';
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isSubmitting) {
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.color = '#06b6d4';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }
-                  }}
-                >
-                  {isSubmitting ? '✈️ Sending...' : '🚀 Send Message'}
-                </button>
-              </form>
-
-              {submitStatus && (
-                <div style={{
-                  marginTop: '20px',
-                  padding: '12px',
-                  borderRadius: '8px',
-                  backgroundColor: submitStatus.type === 'success' ? 'rgba(6, 182, 212, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                  border: `1px solid ${submitStatus.type === 'success' ? '#06b6d4' : '#ef4444'}`,
-                  textAlign: 'center'
-                }}>
-                  <p style={{
-                    color: submitStatus.type === 'success' ? '#06b6d4' : '#ef4444',
-                    fontFamily: 'Monaco, "Lucida Console", monospace',
-                    fontSize: '14px',
-                    margin: 0
-                  }}>
-                    {submitStatus.type === 'success' ? '✅ ' : '❌ '}
-                    {submitStatus.message}
-                  </p>
-                </div>
-              )}
+            <div>
+              <label style={labelStyle}>Your Message *</label>
+              <textarea
+                required
+                name="message"
+                value={formData.message}
+                onChange={handleInputChange}
+                placeholder="Your message here..."
+                rows={5}
+                style={{ ...inputStyle, resize: 'vertical' }}
+                onFocus={(e) => focusEffect(e, true)}
+                onBlur={(e) => focusEffect(e, false)}
+              />
             </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              style={{
+                width: '100%',
+                padding: '14px',
+                borderRadius: '8px',
+                border: 'none',
+                background: isSubmitting ? 'var(--disabled-bg, #374151)' : 'linear-gradient(135deg, #06b6d4, #8b5cf6)',
+                color: 'white',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                fontFamily: 'Monaco, "Lucida Console", monospace',
+                transition: 'all 0.2s ease',
+                marginTop: '8px'
+              }}
+              onMouseEnter={(e) => !isSubmitting && (e.currentTarget.style.transform = 'translateY(-1px)', e.currentTarget.style.boxShadow = '0 4px 12px rgba(6, 182, 212, 0.3)')}
+              onMouseLeave={(e) => !isSubmitting && (e.currentTarget.style.transform = 'translateY(0)', e.currentTarget.style.boxShadow = 'none')}
+            >
+              {isSubmitting ? '✈️ Sending...' : '🚀 Send Message'}
+            </button>
+          </form>
+
+          {submitStatus && (
+            <div style={{
+              marginTop: '16px',
+              padding: '12px',
+              borderRadius: '8px',
+              backgroundColor: submitStatus.type === 'success' ? 'rgba(6, 182, 212, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+              border: `1px solid ${submitStatus.type === 'success' ? '#06b6d4' : '#ef4444'}`,
+              textAlign: 'center'
+            }}>
+              <p style={{
+                color: submitStatus.type === 'success' ? '#06b6d4' : '#ef4444',
+                fontFamily: 'Monaco, "Lucida Console", monospace',
+                fontSize: '14px',
+                margin: 0
+              }}>
+                {submitStatus.type === 'success' ? '✅ ' : '❌ '}{submitStatus.message}
+              </p>
+            </div>
+          )}
+
+          <div style={{ marginTop: '32px', paddingTop: '20px', borderTop: '1px solid var(--border-color, #374151)' }}>
+            <p style={{ fontSize: '14px', color: 'var(--text-secondary, #9ca3af)', fontFamily: 'Monaco, "Lucida Console", monospace', margin: '0 0 8px' }}>
+              Or reach me directly:
+            </p>
+            {contactData.email && (
+              <p style={{ margin: '4px 0', fontSize: '14px' }}>
+                <a href={`mailto:${contactData.email}`} style={{ color: '#06b6d4', textDecoration: 'none', fontFamily: 'Monaco, "Lucida Console", monospace' }}>
+                  📧 {contactData.email}
+                </a>
+              </p>
+            )}
+            {contactData.phone && (
+              <p style={{ margin: '4px 0', fontSize: '14px' }}>
+                <a href={`tel:${contactData.phone}`} style={{ color: '#06b6d4', textDecoration: 'none', fontFamily: 'Monaco, "Lucida Console", monospace' }}>
+                  📞 {contactData.phone}
+                </a>
+              </p>
+            )}
           </div>
         </div>
       </div>
-    </section>
+    </>
   );
 };
 
