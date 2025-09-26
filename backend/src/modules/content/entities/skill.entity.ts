@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, Column, PrimaryGeneratedColumn,CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Skill extends BaseEntity {
@@ -9,7 +9,7 @@ export class Skill extends BaseEntity {
   name: string;
 
   @Column()
-  category: string;
+  category: 'Programming Languages' | 'Frameworks & Tools' | 'Cloud & Databases';
 
   @Column({ nullable: true })
   proficiency?: string;

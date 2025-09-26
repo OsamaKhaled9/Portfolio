@@ -2,7 +2,8 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards, ParseIntPipe,UsePipes,ValidationPipe} from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 import { SkillService } from '../services/skill.service.js';
-import { CreateSkillDto ,UpdateSkillDto } from '../dto/index.js';
+import { CreateSkillDto } from '../dto/create-skill.dto.js';
+import { UpdateSkillDto } from '../dto/update-skill.dto.js';
 
 @Controller('api')
 export class SkillController {
@@ -23,6 +24,33 @@ export class SkillController {
         success: false,
         data: [],
         message: 'Failed to retrieve skills',
+      };
+    }
+  }
+
+  // ✅ NEW: Skills grouped by category
+  @Get('skills/grouped-by-category')
+  async findGroupedByCategory() {
+    try {
+      const skills = await this.skillService.findAll();
+      const grouped = skills.reduce((acc, skill) => {
+        if (!acc[skill.category]) {
+          acc[skill.category] = [];
+        }
+        acc[skill.category].push(skill);
+        return acc;
+      }, {});
+
+      return {
+        success: true,
+        data: grouped,
+        message: 'Skills grouped by category retrieved successfully',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: {},
+        message: 'Failed to retrieve grouped skills',
       };
     }
   }

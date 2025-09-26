@@ -1,34 +1,39 @@
+// src/hooks/useNavbarVisibility.js
 import { useState, useEffect } from 'react';
 
-export const useNavbarVisibility = () => {
-  const [isNavbarVisible, setIsNavbarVisible] = useState(false);
+const useNavbarVisibility = () => {
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.target.id === 'prehero') {
-            // Hide navbar when PreHero is visible, show when it's not
-            setIsNavbarVisible(!entry.isIntersecting);
-          }
-        });
-      },
-      {
-        threshold: 0.3, // Trigger when 30% of section is visible
-        rootMargin: '0px 0px -10% 0px' // Better detection
+    const handleScroll = () => {
+      // Get the PreHero section
+      const preHeroElement = document.getElementById('prehero');
+      
+      if (preHeroElement) {
+        const preHeroRect = preHeroElement.getBoundingClientRect();
+        // Hide navbar when PreHero is visible (when its bottom is still above viewport bottom)
+        const isPreHeroVisible = preHeroRect.bottom > 0 && preHeroRect.top <= window.innerHeight;
+        setIsVisible(!isPreHeroVisible);
+      } else {
+        // If no prehero section found, show navbar by default
+        setIsVisible(true);
       }
-    );
+    };
 
-    // Simple function to observe prehero
-    const preHeroSection = document.getElementById('prehero');
-    if (preHeroSection) {
-      observer.observe(preHeroSection);
-    }
-
+    // Check initial state
+    handleScroll();
+    
+    // Listen to scroll events
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    
     return () => {
-      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
     };
   }, []);
 
-  return isNavbarVisible;
+  return isVisible;
 };
+
+export default useNavbarVisibility;

@@ -18,7 +18,11 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "migration:generate": "npx typeorm migration:generate -d ormconfig.js",
+    "migration:run": "npx typeorm migration:run -d ormconfig.js",
+    "migration:revert": "npx typeorm migration:revert -d ormconfig.js",
+    "migration:create": "npx typeorm migration:create"
   },
   "dependencies": {
     "@adminjs/express": "^6.1.1",

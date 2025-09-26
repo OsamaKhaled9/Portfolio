@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsDate, IsBoolean, IsArray } from 'class-validator';
+import { IsString, IsOptional, IsDate, IsBoolean, IsArray, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateExperienceDto {
@@ -34,7 +34,17 @@ export class CreateExperienceDto {
   @IsString({ each: true })
   technologies?: string[];
 
+  // ✅ ENHANCED: Restricted values
+  @IsOptional()
+  @IsIn(['Work', 'Education', 'Volunteer'])
+  type?: 'Work' | 'Education' | 'Volunteer';
+
+  // ✅ NEW: For education entries
   @IsOptional()
   @IsString()
-  type?: string;
+  institution?: string;
+
+  @IsOptional()
+  @IsString()
+  degree?: string;
 }

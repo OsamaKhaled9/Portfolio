@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsUrl, IsArray, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsUrl, IsArray, IsBoolean, IsNumber, IsIn } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
@@ -31,4 +31,14 @@ export class CreateProjectDto {
   @IsOptional()
   @IsString()
   status?: string;
+
+  // ✅ NEW: Category validation
+  @IsOptional()
+  @IsIn(['Academic', 'Professional', 'Personal'])
+  category?: 'Academic' | 'Professional' | 'Personal';
+
+  // ✅ NEW: Order field
+  @IsOptional()
+  @IsNumber()
+  order?: number;
 }

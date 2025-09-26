@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useScrollToSection } from './hooks/useScrollToSection';
-import { useNavbarVisibility } from './hooks/useNavbarVisibility';
-import { useAnimatedBackground } from './hooks/useAnimatedBackground';
+  import { useAnimatedBackground } from './hooks/useAnimatedBackground';
 import { usePortfolio } from './context/PortfolioContext';
 
 import Navigation from './components/common/Navigation/Navigation';
@@ -13,6 +12,7 @@ import Hero from './sections/Hero/Hero';
 import About from './sections/About';
 import Projects from './sections/Projects/Projects';
 import Contact from './sections/Contact';
+import useNavbarVisibility from './hooks/useNavbarVisibility.js'; // ✅ FIXED: Default import
 
 const Portfolio = () => {
   const { currentSection, scrollToSection } = useScrollToSection();
@@ -31,6 +31,7 @@ const Portfolio = () => {
   }, [dispatch]);
 
   return (
+    <div className="portfolio-container">
     <>
       <Loader 
         isVisible={state.isLoading} 
@@ -62,6 +63,7 @@ const Portfolio = () => {
         <ChatBot />
       </div>
     </>
+    </div>
   );
 };
 

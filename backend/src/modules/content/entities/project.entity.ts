@@ -1,4 +1,6 @@
-import { BaseEntity, Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+// src/modules/content/entities/project.entity.ts
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+
 @Entity()
 export class Project extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -22,11 +24,20 @@ export class Project extends BaseEntity {
   @Column({ default: false })
   featured: boolean;
 
-  @Column({ type: 'simple-array', nullable: true })
+  // ✅ CHANGED: simple-array → json
+  @Column({ type: 'json', nullable: true })
   techStack?: string[];
 
   @Column({ default: 'active' })
   status: string;
+
+  // ✅ NEW: Project category
+  @Column({ default: 'Personal' })
+  category: 'Academic' | 'Professional' | 'Personal';
+
+  // ✅ NEW: For custom sorting
+  @Column({ default: 0 })
+  order: number;
 
   @CreateDateColumn()
   createdAt: Date;

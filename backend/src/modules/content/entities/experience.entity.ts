@@ -1,6 +1,8 @@
-import {BaseEntity, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+// src/modules/content/entities/experience.entity.ts
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+
 @Entity()
-export class Experience extends BaseEntity{
+export class Experience extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -25,11 +27,21 @@ export class Experience extends BaseEntity{
   @Column({ nullable: true })
   location?: string;
 
-  @Column({ type: 'simple-array', nullable: true })
+  // ✅ CHANGED: simple-array → json
+  @Column({ type: 'json', nullable: true })
   technologies?: string[];
 
-  @Column({ default: 'work' })
-  type: string; // work, education, volunteer, etc.
+  // ✅ ENHANCED: Restricted to specific values
+  @Column({ default: 'Work' })
+  type: 'Work' | 'Education' | 'Volunteer';
+
+  // ✅ NEW: For education entries
+  @Column({ nullable: true })
+  institution?: string;
+
+  // ✅ NEW: For education entries  
+  @Column({ nullable: true })
+  degree?: string;
 
   @CreateDateColumn()
   createdAt: Date;

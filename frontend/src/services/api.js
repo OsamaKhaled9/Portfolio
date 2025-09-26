@@ -1,4 +1,5 @@
-const API_BASE_URL =  'http://localhost:3000';
+// src/services/api.js - Complete Implementation
+const API_BASE_URL = 'http://localhost:3000';
 
 class ApiService {
   constructor() {
@@ -27,12 +28,134 @@ class ApiService {
     }
   }
 
-  // GET request
+  // ===== PROFILE METHODS =====
+  async getProfile() {
+    return this.request('/api/profile');
+  }
+
+  async updateProfile(data) {
+    return this.request('/api/admin/profile', {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async getPortfolio() {
+    return this.request('/api/portfolio');
+  }
+
+  // ===== PROJECT METHODS =====
+  async getProjects() {
+    return this.request('/api/projects');
+  }
+
+  async getProject(id) {
+    return this.request(`/api/projects/${id}`);
+  }
+
+  async createProject(data) {
+    return this.request('/api/admin/projects', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async updateProject(id, data) {
+    return this.request(`/api/admin/projects/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async deleteProject(id) {
+    return this.request(`/api/admin/projects/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  // ===== SKILL METHODS =====
+  async getSkills() {
+    return this.request('/api/skills');
+  }
+
+  async getSkillsGrouped() {
+    return this.request('/api/skills/grouped-by-category');
+  }
+
+  async getSkill(id) {
+    return this.request(`/api/skills/${id}`);
+  }
+
+  async createSkill(data) {
+    return this.request('/api/admin/skills', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async updateSkill(id, data) {
+    return this.request(`/api/admin/skills/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async deleteSkill(id) {
+    return this.request(`/api/admin/skills/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  // ===== EXPERIENCE METHODS =====
+  async getExperience() {
+    return this.request('/api/experience');
+  }
+
+  async getExperienceItem(id) {
+    return this.request(`/api/experience/${id}`);
+  }
+
+  async createExperience(data) {
+    return this.request('/api/admin/experience', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async updateExperience(id, data) {
+    return this.request(`/api/admin/experience/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async deleteExperience(id) {
+    return this.request(`/api/admin/experience/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  // ===== CONTACT METHODS =====
+  async sendContactMessage(data) {
+    return this.request('/api/contact', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+
+  // ===== AUTHENTICATION METHODS =====
+  async login(email, password) {
+    return this.request('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password })
+    });
+  }
+
+  // ===== UTILITY METHODS =====
   async get(endpoint) {
     return this.request(endpoint);
   }
 
-  // POST request  
   async post(endpoint, data) {
     return this.request(endpoint, {
       method: 'POST',
@@ -40,7 +163,6 @@ class ApiService {
     });
   }
 
-  // PUT request
   async put(endpoint, data) {
     return this.request(endpoint, {
       method: 'PUT',
@@ -48,28 +170,15 @@ class ApiService {
     });
   }
 
-  // DELETE request
   async delete(endpoint) {
     return this.request(endpoint, {
       method: 'DELETE'
     });
   }
-  async getProfile() {
-  return this.get('/api/profile');
 }
 
-async getSkills() {
-  return this.get('/api/skills');
-}
-
-async getExperience() {
-  return this.get('/api/experience');
-}
-
-async getProjects() {
-  return this.get('/api/projects');
-}
-
-}
-
+// Create and export singleton instance
 export const apiService = new ApiService();
+
+// Also export the class for potential direct usage
+export default apiService;

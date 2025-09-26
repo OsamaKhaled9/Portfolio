@@ -1,11 +1,12 @@
-import { IsString, IsOptional, IsNumber, IsUrl } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsUrl, IsIn } from 'class-validator';
 
 export class CreateSkillDto {
   @IsString()
   name: string;
 
-  @IsString()
-  category: string;
+  // ✅ ENHANCED: Fixed category options
+  @IsIn(['Programming Languages', 'Frameworks & Tools', 'Cloud & Databases'])
+  category: 'Programming Languages' | 'Frameworks & Tools' | 'Cloud & Databases';
 
   @IsOptional()
   @IsString()
@@ -23,5 +24,3 @@ export class CreateSkillDto {
   @IsNumber()
   yearsOfExperience?: number;
 }
-
-
