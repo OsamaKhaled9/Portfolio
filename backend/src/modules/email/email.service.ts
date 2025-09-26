@@ -1,3 +1,4 @@
+// src/modules/email/email.service.ts - Debug Version
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
@@ -10,10 +11,34 @@ export class EmailService {
       const brevoApiKey = this.configService.get<string>('BREVO_API_KEY');
       const ownerEmail = this.configService.get<string>('OWNER_EMAIL');
 
-      const emailData = {
+      // ✅ DEBUG: Log environment variables
+      console.log('🔍 EMAIL DEBUG - Environment Check:');
+      console.log('📧 Owner Email:', ownerEmail);
+      console.log('🔑 Brevo API Key exists:', !!brevoApiKey);
+      console.log('🔑 API Key length:', brevoApiKey ? brevoApiKey.length : 0);
+      
+      // ✅ DEBUG: Log contact data
+      console.log('📝 Contact Data:', {
+        name: contactData.name,
+        email: contactData.email,
+        subject: contactData.subject,
+        messageLength: contactData.message?.length
+      });
+
+      if (!brevoApiKey) {
+        console.error('❌ BREVO_API_KEY not found in environment variables');
+        return false;
+      }
+
+      if (!ownerEmail) {
+        console.error('❌ OWNER_EMAIL not found in environment variables');
+        return false;
+      }
+
+        const emailData = {
         sender: {
-          name: 'Portfolio Contact Form',
-          email: 'noreply@yourdomain.com'
+            name: 'Portfolio Contact Form',
+            email: ownerEmail  // ✅ Use the same email for sender and recipient
         },
         to: [
           {
@@ -38,23 +63,42 @@ export class EmailService {
         }
       };
 
+      // ✅ DEBUG: Log email payload
+      console.log('📤 Sending email with payload:', {
+        sender: emailData.sender,
+        to: emailData.to,
+        subject: emailData.subject,
+      });
+
       const response = await fetch('https://api.brevo.com/v3/smtp/email', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'api-key': brevoApiKey!
+          'api-key': brevoApiKey
         },
         body: JSON.stringify(emailData)
       });
 
+      // ✅ DEBUG: Log API response
+      console.log('📡 Brevo API Response Status:', response.status);
+      
+      const responseText = await response.text();
+      console.log('📡 Brevo API Response:', responseText);
+
       if (!response.ok) {
-        throw new Error(`Brevo API error: ${response.status}`);
+        console.error('❌ Brevo API Error:', {
+          status: response.status,
+          statusText: response.statusText,
+          body: responseText
+        });
+        return false;
       }
 
+      console.log('✅ Email sent successfully!');
       return true;
     } catch (error) {
-      console.error('Email sending failed:', error);
+      console.error('💥 Email sending failed with exception:', error);
       return false;
     }
   }

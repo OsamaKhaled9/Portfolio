@@ -55,4 +55,14 @@ export class ContactService {
       return false;
     }
   }
+
+// Add this to your contact.service.ts
+async testEmail() {
+  return await this.emailService.sendContactEmail({
+    name: 'Test User',
+    email: 'test@example.com',
+    subject: 'Test Email',
+    message: 'This is a test email from your portfolio contact form.'
+  });
+}
 }
