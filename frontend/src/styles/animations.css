@@ -11,7 +11,7 @@ html {
   overflow-x: hidden;
   /* Base font size that scales with viewport */
   font-size: clamp(14px, 1.5vw, 18px);
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
   scroll-padding-top: 80px; /* Account for fixed navbar */
 }
 
@@ -39,6 +39,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden; /* Prevent horizontal overflow */
+  /* ✨ REMOVED: background and color - handled by global background */
 }
 
 /* Page frame that actually centers and scales */
@@ -262,23 +263,7 @@ nav .nav-link {
   }
 }
 
-/* Theme-aware styles */
-.dark-theme {
-  background: linear-gradient(135deg, #000000 0%, #111827 50%, #000000 100%);
-  color: #ffffff;
-}
-
-.light-theme {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
-  color: #1e293b;
-}
-
-/* Update existing styles to use CSS variables */
-body {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
+/* ✨ REMOVED: Theme-aware background styles that conflict with global background */
 
 /* Update navigation styles */
 nav {
@@ -325,43 +310,7 @@ p {
   color: var(--accent-primary) !important;
 }
 
-/* Hero section theme support */
-.hero-section.dark {
-  background: linear-gradient(135deg, #000000 0%, #111827 50%, #000000 100%);
-  color: #ffffff;
-}
-
-.hero-section.light {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
-  color: #1e293b;
-}
-
-/* Ensure proper theme transitions */
-.hero-section, .prehero-section {
-  transition: background 0.3s ease, color 0.3s ease;
-}
-/* Mobile viewport fix */
-:root {
-  --vh: 1vh;
-}
-
-/* Enhanced mobile support */
-.prehero-section {
-  height: calc(var(--vh) * 100);
-  max-height: calc(var(--vh) * 100);
-  min-height: calc(var(--vh) * 100);
-  overflow: hidden;
-  position: relative;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: none;
-}
-
-/* iOS Safari specific fixes */
-@supports (-webkit-touch-callout: none) {
-  .prehero-section {
-    min-height: -webkit-fill-available;
-  }
-}
+/* ✨ REMOVED: Hero section theme-specific backgrounds that conflict */
 
 /* Loading spinner global styles */
 .loading-spinner {
