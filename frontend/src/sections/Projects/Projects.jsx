@@ -1,37 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import ProjectCard from '../../components/ui/ProjectCard/ProjectCard.jsx';
-import { projectsStyles } from './Projects.styles';
+import ProjectCarousel from '../../components/ui/ProjectCarousel/ProjectCarousel.jsx';
 import { projects } from '../../data/projects';
 import { apiService } from '../../services/api';
+import { useTheme } from '../../context/ThemeContext';
 
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // Add dynamic data state
   const [dynamicProjects, setDynamicProjects] = useState(projects);
   const [loading, setLoading] = useState(true);
+  const { isDarkMode } = useTheme();
 
-  // Transform API projects to match your current structure
+  // Transform API projects
   const transformProjects = (apiProjects) => {
     return apiProjects.map(project => ({
       id: project.id,
       title: project.title,
       description: project.description,
-      tech: project.techStack || [], // API uses techStack, you use tech
-      image: project.imageUrl || '/default-project.png',
+      tech: project.techStack || [],
+      image: project.imageUrl || null,
       links: {
         github: project.githubUrl,
         demo: project.liveUrl
       },
       featured: project.featured || false,
-      status: project.status,
-      // Keep any additional fields your static data might have
-      grade: null // Add this if some projects have grades in your static data
+      status: project.status || 'Completed',
+      grade: null
     }));
   };
 
-  // Fetch projects from API
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -42,11 +39,9 @@ const Projects = () => {
           const transformed = transformProjects(apiProjects);
           setDynamicProjects(transformed);
         }
-        // If no API data, keep static fallback
         
       } catch (error) {
         console.error('Failed to fetch projects:', error);
-        // Keep static data as fallback
       } finally {
         setLoading(false);
       }
@@ -55,8 +50,7 @@ const Projects = () => {
     fetchProjects();
   }, []);
 
-  const handleViewDetails = (project) => {
-    console.log('Opening modal for:', project.title); // Debug log
+  const handleProjectSelect = (project) => {
     setSelectedProject(project);
     setIsModalOpen(true);
   };
@@ -65,39 +59,23 @@ const Projects = () => {
     setIsModalOpen(false);
     setSelectedProject(null);
   };
-
-  const handleViewCode = (project) => {
-    console.log('View code for:', project.title);
-    if (project.links?.github) {
-      window.open(project.links.github, '_blank');
-    }
-  };
-
   return (
     <>
-      <section id="projects" style={projectsStyles.section}>
-        <div style={projectsStyles.container}>
-          <div style={projectsStyles.header}>
-            <h2 style={projectsStyles.title}>Featured Projects</h2>
-            <p style={projectsStyles.description}>
-              A showcase of my academic and professional projects, featuring AI systems, cloud architecture, and full-stack applications
-            </p>
-          </div>
-          
-          <div style={projectsStyles.grid}>
-            {dynamicProjects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                onViewDetails={handleViewDetails}
-                onViewCode={handleViewCode}
-              />
-            ))}
-          </div>
-        </div>
+      <section id="projects" style={{ 
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+        zIndex: 1,
+        padding: 0
+      }}>
+        <ProjectCarousel 
+          projects={dynamicProjects}
+          onProjectSelect={handleProjectSelect}
+        />
       </section>
 
-      {/* Simple Modal - EXACT SAME AS BEFORE */}
+      {/* Keep your existing modal */}
       {isModalOpen && selectedProject && (
         <div
           style={{
@@ -106,7 +84,7 @@ const Projects = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0.6)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

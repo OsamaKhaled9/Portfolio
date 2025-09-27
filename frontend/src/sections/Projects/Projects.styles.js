@@ -3,7 +3,6 @@ export const projectsStyles = {
     minHeight: '100vh',
     display: 'flex',
     alignItems: 'center',
-    /* ✨ REMOVED: backgroundColor - now uses global background */
     position: 'relative',
     zIndex: 1,
     padding: 'clamp(60px, 10vh, 80px) 0'
@@ -21,12 +20,12 @@ export const projectsStyles = {
   title: {
     fontSize: 'clamp(1.8rem, 5vw, 2.25rem)',
     fontWeight: 'bold',
-    color: 'var(--accent-primary)',
+    color: 'var(--accent-primary)', // ✨ FIXED: Uses CSS variable for theme support
     marginBottom: 'clamp(16px, 3vh, 24px)',
     fontFamily: 'Monaco, "Lucida Console", monospace'
   },
   description: {
-    color: 'var(--text-secondary)',
+    color: 'var(--text-secondary)', // ✨ FIXED: Uses CSS variable for theme support
     fontSize: 'clamp(1rem, 2.5vw, 1.125rem)',
     maxWidth: '512px',
     margin: '0 auto',
