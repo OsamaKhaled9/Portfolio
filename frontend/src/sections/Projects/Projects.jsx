@@ -11,7 +11,6 @@ const Projects = () => {
   const [loading, setLoading] = useState(true);
   const { isDarkMode } = useTheme();
 
-  // Transform API projects
   const transformProjects = (apiProjects) => {
     return apiProjects.map(project => ({
       id: project.id,
@@ -39,7 +38,6 @@ const Projects = () => {
           const transformed = transformProjects(apiProjects);
           setDynamicProjects(transformed);
         }
-        
       } catch (error) {
         console.error('Failed to fetch projects:', error);
       } finally {
@@ -59,15 +57,18 @@ const Projects = () => {
     setIsModalOpen(false);
     setSelectedProject(null);
   };
+
   return (
     <>
       <section id="projects" style={{ 
-        minHeight: '100vh',
+        height: '100vh', /* ✨ EXACT: height */
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'center',
         position: 'relative',
         zIndex: 1,
-        padding: 0
+        padding: 0, /* ✨ REMOVED: all padding */
+        margin: 0 /* ✨ REMOVED: all margin */
       }}>
         <ProjectCarousel 
           projects={dynamicProjects}
@@ -75,7 +76,7 @@ const Projects = () => {
         />
       </section>
 
-      {/* Keep your existing modal */}
+      {/* ✨ SIMPLIFIED: Modal with guaranteed links */}
       {isModalOpen && selectedProject && (
         <div
           style={{
@@ -95,8 +96,8 @@ const Projects = () => {
         >
           <div
             style={{
-              backgroundColor: '#1f2937',
-              border: '1px solid #06b6d4',
+              backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
+              border: `1px solid ${isDarkMode ? '#06b6d4' : '#0891b2'}`,
               borderRadius: '12px',
               padding: '24px',
               maxWidth: '600px',
@@ -114,8 +115,8 @@ const Projects = () => {
                 top: '12px',
                 right: '12px',
                 backgroundColor: 'transparent',
-                color: '#9ca3af',
-                border: '1px solid #4b5563',
+                color: isDarkMode ? '#9ca3af' : '#6b7280',
+                border: `1px solid ${isDarkMode ? '#4b5563' : '#d1d5db'}`,
                 borderRadius: '6px',
                 padding: '6px 12px',
                 cursor: 'pointer'
@@ -124,62 +125,81 @@ const Projects = () => {
               ✕
             </button>
 
-            <h2 style={{ color: '#06b6d4', fontSize: '24px', marginBottom: '16px', marginRight: '40px' }}>
+            <h2 style={{ 
+              color: isDarkMode ? '#06b6d4' : '#0891b2',
+              fontSize: '24px', 
+              marginBottom: '16px', 
+              marginRight: '40px' 
+            }}>
               {selectedProject.title}
             </h2>
 
-            {selectedProject.grade && (
-              <div style={{ color: '#10b981', fontWeight: 'bold', marginBottom: '12px' }}>
-                Grade: {selectedProject.grade}
-              </div>
-            )}
-
-            <div style={{ color: '#06b6d4', marginBottom: '16px', fontFamily: 'Monaco, "Lucida Console", monospace' }}>
+            <div style={{ 
+              color: isDarkMode ? '#06b6d4' : '#0891b2',
+              marginBottom: '16px', 
+              fontFamily: 'Monaco, "Lucida Console", monospace' 
+            }}>
               {Array.isArray(selectedProject.tech) ? selectedProject.tech.join(', ') : selectedProject.tech}
             </div>
 
-            <p style={{ color: '#d1d5db', lineHeight: 1.6, marginBottom: '20px' }}>
+            <p style={{ 
+              color: isDarkMode ? '#d1d5db' : '#374151',
+              lineHeight: 1.6, 
+              marginBottom: '20px' 
+            }}>
               {selectedProject.description}
             </p>
 
-            {selectedProject.links && (
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                {selectedProject.links.demo && (
-                  <a
-                    href={selectedProject.links.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      padding: '10px 20px',
-                      backgroundColor: '#06b6d4',
-                      color: 'white',
-                      textDecoration: 'none',
-                      borderRadius: '8px',
-                      fontFamily: 'Monaco, "Lucida Console", monospace'
-                    }}
-                  >
-                    Live Demo
-                  </a>
-                )}
-                {selectedProject.links.github && (
-                  <a
-                    href={selectedProject.links.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      padding: '10px 20px',
-                      border: '1px solid #4b5563',
-                      color: '#d1d5db',
-                      textDecoration: 'none',
-                      borderRadius: '8px',
-                      fontFamily: 'Monaco, "Lucida Console", monospace'
-                    }}
-                  >
-                    GitHub
-                  </a>
-                )}
-              </div>
-            )}
+            {/* ✨ GUARANTEED: Links section */}
+            <div style={{ 
+              display: 'flex', 
+              gap: '12px', 
+              flexWrap: 'wrap'
+            }}>
+              {selectedProject.links?.demo && (
+                <a
+                  href={selectedProject.links.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    padding: '12px 20px',
+                    backgroundColor: '#06b6d4',
+                    color: 'white',
+                    textDecoration: 'none',
+                    borderRadius: '8px',
+                    fontFamily: 'Monaco, "Lucida Console", monospace',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  🚀 Live Demo
+                </a>
+              )}
+              {selectedProject.links?.github && (
+                <a
+                  href={selectedProject.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    padding: '12px 20px',
+                    border: '2px solid #06b6d4',
+                    backgroundColor: 'transparent',
+                    color: '#06b6d4',
+                    textDecoration: 'none',
+                    borderRadius: '8px',
+                    fontFamily: 'Monaco, "Lucida Console", monospace',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  📂 GitHub
+                </a>
+              )}
+              {/* ✨ DEBUG: Show available links */}
+              {!selectedProject.links?.demo && !selectedProject.links?.github && (
+                <div style={{ color: '#999', fontStyle: 'italic' }}>
+                  No links available for this project
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

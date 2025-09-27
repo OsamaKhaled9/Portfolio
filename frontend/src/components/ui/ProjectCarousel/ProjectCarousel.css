@@ -1,21 +1,21 @@
 .project-carousel {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh; /* ✨ FIXED: Exact height, no extra space */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-  padding: 2rem 1rem;
+  padding: 0; /* ✨ REMOVED: All padding */
 }
 
 .carousel-title {
-  font-size: clamp(4rem, 8vw, 7.5rem);
+  font-size: clamp(3rem, 6vw, 6rem); /* ✨ SMALLER: title */
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.02em;
   position: absolute;
-  top: 45px;
+  top: 10px; /* ✨ MUCH SMALLER: top spacing */
   left: 50%;
   transform: translateX(-50%);
   pointer-events: none;
@@ -24,7 +24,6 @@
   z-index: 1;
 }
 
-/* Theme-specific title styles */
 .project-carousel.dark .carousel-title {
   background: linear-gradient(
     to bottom,
@@ -53,7 +52,7 @@
   height: 450px;
   position: relative;
   perspective: 1000px;
-  margin-top: 80px;
+  margin-top: 40px; /* ✨ MUCH SMALLER: spacing */
 }
 
 .carousel-track {
@@ -78,7 +77,6 @@
   border: 2px solid transparent;
 }
 
-/* Theme-specific card styles */
 .project-carousel.dark .project-card {
   background: var(--bg-tertiary);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
@@ -97,12 +95,12 @@
   flex-direction: column;
 }
 
-/* ✨ IMPROVED: Better image layout */
 .project-image {
   width: 100%;
-  height: 60%;
+  height: 45%; /* ✨ SMALLER: to fit links */
   overflow: hidden;
   position: relative;
+  flex-shrink: 0;
 }
 
 .project-image img {
@@ -112,33 +110,23 @@
   transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* ✨ IMPROVED: Better overlay with more info */
-.project-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 40%;
-  padding: 1.2rem;
+.project-info {
+  height: 55%; /* ✨ LARGER: to fit links */
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: linear-gradient(
-    to top,
-    var(--bg-tertiary) 0%,
-    rgba(0, 0, 0, 0.8) 70%,
-    rgba(0, 0, 0, 0.4) 100%
-  );
+  background: var(--bg-tertiary);
+  flex-shrink: 0;
 }
 
-/* ✨ NEW: Info card for projects without images */
-.project-info-card {
+.project-info-full {
   width: 100%;
   height: 100%;
-  padding: 2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   text-align: center;
   background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
@@ -146,58 +134,152 @@
 }
 
 .project-card-title {
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: bold;
-  color: #ffffff;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.5rem;
   font-family: 'Monaco', monospace;
   line-height: 1.2;
+  height: 2.2rem; /* ✨ FIXED: height */
+  display: flex;
+  align-items: center;
 }
 
-.project-info-card .project-card-title {
-  font-size: 1.6rem;
-  margin-bottom: 1rem;
+.project-info .project-card-title {
+  color: var(--text-primary);
+}
+
+.project-info-full .project-card-title {
+  color: #ffffff;
+  justify-content: center;
 }
 
 .project-card-description {
-  font-size: 0.9rem;
-  color: #e5e7eb;
-  line-height: 1.4;
-  margin-bottom: 0.8rem;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+  height: 2.6rem; /* ✨ FIXED: height */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* ✨ REDUCED: lines */
+  -webkit-box-orient: vertical;
 }
 
-.project-info-card .project-card-description {
-  font-size: 1rem;
-  margin-bottom: 1.2rem;
-  opacity: 0.9;
+.project-info .project-card-description {
+  color: var(--text-secondary);
+}
+
+.project-info-full .project-card-description {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .project-tech {
   font-family: 'Monaco', monospace;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  color: #06b6d4;
+  margin-bottom: 0.5rem;
+  height: 1.4rem; /* ✨ FIXED: height */
+  display: flex;
+  align-items: center;
   text-align: center;
+  overflow: hidden;
 }
 
-.project-info-card .project-tech {
+.project-info .project-tech {
+  color: var(--accent-primary);
+}
+
+.project-info-full .project-tech {
   color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
+  justify-content: center;
 }
 
 .project-status {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-top: 0.5rem;
-  padding: 0.3rem 0.8rem;
+  margin-bottom: 0.5rem;
+  padding: 0.2rem 0.5rem;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 12px;
+  border-radius: 8px;
   display: inline-block;
+  align-self: center;
 }
 
-/* Card positions */
+/* ✨ FIXED: Visible project links */
+.project-links {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  height: 2rem; /* ✨ FIXED: height */
+}
+
+.link-btn {
+  padding: 0.4rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Monaco', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
+  border: none;
+  user-select: none;
+}
+
+.link-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* ✨ HIGH CONTRAST: Visible buttons */
+.project-info .link-btn.github {
+  background: #333;
+  color: white;
+}
+
+.project-info .link-btn.github:hover {
+  background: #06b6d4;
+}
+
+.project-info .link-btn.demo {
+  background: #06b6d4;
+  color: white;
+}
+
+.project-info .link-btn.demo:hover {
+  background: #8b5cf6;
+}
+
+.project-info-full .link-btn.github {
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+}
+
+.project-info-full .link-btn.github:hover {
+  background: white;
+}
+
+.project-info-full .link-btn.demo {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.project-info-full .link-btn.demo:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ✨ DEBUG: No links indicator */
+.no-links {
+  font-size: 0.6rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* Card positions - unchanged */
 .project-card.center {
   z-index: 10;
   transform: scale(1.05) translateZ(0);
@@ -256,13 +338,13 @@
 .carousel-dots {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-top: 40px;
+  gap: 8px;
+  margin-top: 15px; /* ✨ MUCH SMALLER: spacing */
 }
 
 .dot {
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: rgba(6, 182, 212, 0.3);
   cursor: pointer;
@@ -271,10 +353,9 @@
 
 .dot.active {
   background: var(--accent-primary);
-  transform: scale(1.3);
+  transform: scale(1.2);
 }
 
-/* ✨ FIXED: Better centered arrows */
 .nav-arrow {
   position: absolute;
   top: 50%;
@@ -316,20 +397,27 @@
   right: 20px;
 }
 
-/* ✨ NEW: Simple instruction */
 .carousel-instruction {
   color: var(--text-secondary);
   font-family: 'Monaco', monospace;
-  font-size: 0.9rem;
-  margin-top: 20px;
+  font-size: 0.75rem;
+  margin-top: 10px; /* ✨ MUCH SMALLER: spacing */
   opacity: 0.7;
   text-align: center;
+  max-width: 400px;
+  line-height: 1.2;
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .carousel-title {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    top: 5px;
+  }
+
+  .carousel-container {
+    margin-top: 30px;
+    height: 380px;
   }
 
   .project-card {
@@ -337,80 +425,12 @@
     height: 320px;
   }
 
-  .project-card.left-2 {
-    transform: translateX(-280px) scale(0.8) translateZ(-300px);
+  .carousel-dots {
+    margin-top: 10px;
   }
 
-  .project-card.left-1 {
-    transform: translateX(-140px) scale(0.9) translateZ(-100px);
-  }
-
-  .project-card.right-1 {
-    transform: translateX(140px) scale(0.9) translateZ(-100px);
-  }
-
-  .project-card.right-2 {
-    transform: translateX(280px) scale(0.8) translateZ(-300px);
-  }
-
-  .nav-arrow {
-    width: 40px;
-    height: 40px;
-  }
-
-  .nav-arrow span {
-    font-size: 1.5rem;
-  }
-
-  .project-overlay {
-    padding: 1rem;
-  }
-
-  .project-info-card {
-    padding: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .carousel-container {
-    height: 350px;
-  }
-
-  .project-card {
-    width: 200px;
-    height: 280px;
-  }
-
-  .project-card.left-2 {
-    transform: translateX(-220px) scale(0.8) translateZ(-300px);
-  }
-
-  .project-card.left-1 {
-    transform: translateX(-110px) scale(0.9) translateZ(-100px);
-  }
-
-  .project-card.right-1 {
-    transform: translateX(110px) scale(0.9) translateZ(-100px);
-  }
-
-  .project-card.right-2 {
-    transform: translateX(220px) scale(0.8) translateZ(-300px);
-  }
-
-  .nav-arrow {
-    width: 35px;
-    height: 35px;
-  }
-
-  .nav-arrow span {
-    font-size: 1.2rem;
-  }
-
-  .project-card-title {
-    font-size: 1.2rem;
-  }
-
-  .project-card-description {
-    font-size: 0.8rem;
+  .carousel-instruction {
+    margin-top: 5px;
+    font-size: 0.7rem;
   }
 }

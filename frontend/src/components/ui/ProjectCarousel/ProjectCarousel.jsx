@@ -22,10 +22,18 @@ const ProjectCarousel = ({ projects, onProjectSelect }) => {
 
   const handleCardClick = (index) => {
     if (index === currentIndex) {
-      // ✨ SIMPLIFIED: Always open modal when center card is clicked
       onProjectSelect(projects[index]);
     } else {
       updateCarousel(index);
+    }
+  };
+
+  // ✨ SIMPLIFIED: Direct link handling
+  const handleLinkClick = (e, url) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -67,6 +75,11 @@ const ProjectCarousel = ({ projects, onProjectSelect }) => {
     return <div>No projects available</div>;
   }
 
+  const truncateText = (text, maxLength) => {
+    if (!text) return '';
+    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+  };
+
   return (
     <div className={`project-carousel ${isDarkMode ? 'dark' : 'light'}`}>
       <h1 className="carousel-title">FEATURED PROJECTS</h1>
@@ -77,7 +90,6 @@ const ProjectCarousel = ({ projects, onProjectSelect }) => {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        {/* ✨ FIXED: Better centered arrows */}
         <button 
           className="nav-arrow left"
           onClick={() => updateCarousel(currentIndex - 1)}
@@ -104,46 +116,90 @@ const ProjectCarousel = ({ projects, onProjectSelect }) => {
                 onClick={() => handleCardClick(index)}
                 data-index={index}
               >
-                {/* ✨ IMPROVED: Better card preview with image/title + description */}
                 <div className="card-content">
                   {project.image ? (
                     <>
-                      {/* Show image with overlay */}
                       <div className="project-image">
                         <img src={project.image} alt={project.title} />
                       </div>
-                      <div className="project-overlay">
-                        <h3 className="project-card-title">{project.title}</h3>
+                      <div className="project-info">
+                        <h3 className="project-card-title">
+                          {truncateText(project.title, 30)}
+                        </h3>
                         <p className="project-card-description">
-                          {project.description.length > 60 
-                            ? `${project.description.substring(0, 60)}...`
-                            : project.description
-                          }
+                          {truncateText(project.description, 60)}
                         </p>
                         <div className="project-tech">
                           {Array.isArray(project.tech) 
-                            ? project.tech.slice(0, 3).join(' • ')
-                            : project.tech
+                            ? project.tech.slice(0, 2).join(' • ')
+                            : project.tech || 'N/A'
                           }
+                        </div>
+                        {/* ✨ SIMPLIFIED: Always visible links */}
+                        <div className="project-links">
+                          {project.links?.github && (
+                            <div
+                              className="link-btn github"
+                              onClick={(e) => handleLinkClick(e, project.links.github)}
+                            >
+                              GitHub
+                            </div>
+                          )}
+                          {project.links?.demo && (
+                            <div
+                              className="link-btn demo"
+                              onClick={(e) => handleLinkClick(e, project.links.demo)}
+                            >
+                              Demo
+                            </div>
+                          )}
+                          {/* ✨ DEBUG: Show if no links */}
+                          {!project.links?.github && !project.links?.demo && (
+                            <div className="no-links">No Links</div>
+                          )}
                         </div>
                       </div>
                     </>
                   ) : (
                     <>
-                      {/* Show full project info when no image */}
-                      <div className="project-info-card">
-                        <h3 className="project-card-title">{project.title}</h3>
+                      <div className="project-info-full">
+                        <h3 className="project-card-title">
+                          {truncateText(project.title, 35)}
+                        </h3>
                         <p className="project-card-description">
-                          {project.description}
+                          {truncateText(project.description, 100)}
                         </p>
                         <div className="project-tech">
                           {Array.isArray(project.tech) 
-                            ? project.tech.slice(0, 4).join(' • ')
-                            : project.tech
+                            ? project.tech.slice(0, 3).join(' • ')
+                            : project.tech || 'N/A'
                           }
                         </div>
                         <div className="project-status">
                           {project.status || 'Completed'}
+                        </div>
+                        {/* ✨ SIMPLIFIED: Always visible links */}
+                        <div className="project-links">
+                          {project.links?.github && (
+                            <div
+                              className="link-btn github"
+                              onClick={(e) => handleLinkClick(e, project.links.github)}
+                            >
+                              GitHub
+                            </div>
+                          )}
+                          {project.links?.demo && (
+                            <div
+                              className="link-btn demo"
+                              onClick={(e) => handleLinkClick(e, project.links.demo)}
+                            >
+                              Demo
+                            </div>
+                          )}
+                          {/* ✨ DEBUG: Show if no links */}
+                          {!project.links?.github && !project.links?.demo && (
+                            <div className="no-links">No Links</div>
+                          )}
                         </div>
                       </div>
                     </>
@@ -163,8 +219,6 @@ const ProjectCarousel = ({ projects, onProjectSelect }) => {
         </button>
       </div>
 
-      {/* ✨ REMOVED: Redundant project info section */}
-      
       <div className="carousel-dots">
         {projects.map((_, index) => (
           <div
@@ -176,9 +230,8 @@ const ProjectCarousel = ({ projects, onProjectSelect }) => {
         ))}
       </div>
 
-      {/* ✨ ADDED: Simple instruction */}
       <p className="carousel-instruction">
-        Click on the center project to view details
+        Click center card for details • Click links to open directly
       </p>
     </div>
   );
