@@ -37,6 +37,10 @@ export const ThemeProvider = ({ children }) => {
       root.style.setProperty('--accent-primary', '#06b6d4');
       root.style.setProperty('--accent-secondary', '#8b5cf6');
       root.style.setProperty('--bg-secondary-rgb', '17, 24, 39');
+      
+      // ✨ Global background gradients
+      root.style.setProperty('--global-background', 'linear-gradient(135deg, #000000 0%, #111827 50%, #000000 100%)');
+      root.style.setProperty('--section-overlay', 'rgba(0, 0, 0, 0.3)');
     } else {
       // Light theme colors
       root.style.setProperty('--bg-primary', '#ffffff');
@@ -49,6 +53,10 @@ export const ThemeProvider = ({ children }) => {
       root.style.setProperty('--accent-primary', '#0891b2');
       root.style.setProperty('--accent-secondary', '#7c3aed');
       root.style.setProperty('--bg-secondary-rgb', '248, 250, 252');
+      
+      // ✨ Global background gradients for light mode
+      root.style.setProperty('--global-background', 'linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%)');
+      root.style.setProperty('--section-overlay', 'rgba(255, 255, 255, 0.3)');
     }
   }, [isDarkMode]);
 

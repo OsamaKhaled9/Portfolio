@@ -3,7 +3,7 @@ export const projectsStyles = {
     minHeight: '100vh',
     display: 'flex',
     alignItems: 'center',
-    //backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    /* ✨ REMOVED: backgroundColor - now uses global background */
     position: 'relative',
     zIndex: 1,
     padding: 'clamp(60px, 10vh, 80px) 0'
@@ -21,12 +21,12 @@ export const projectsStyles = {
   title: {
     fontSize: 'clamp(1.8rem, 5vw, 2.25rem)',
     fontWeight: 'bold',
-    color: '#06b6d4',
+    color: 'var(--accent-primary)',
     marginBottom: 'clamp(16px, 3vh, 24px)',
     fontFamily: 'Monaco, "Lucida Console", monospace'
   },
   description: {
-    color: '#9ca3af',
+    color: 'var(--text-secondary)',
     fontSize: 'clamp(1rem, 2.5vw, 1.125rem)',
     maxWidth: '512px',
     margin: '0 auto',
@@ -36,6 +36,6 @@ export const projectsStyles = {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(280px, 40vw, 350px), 1fr))',
     gap: 'clamp(20px, 4vw, 32px)',
-    alignItems: 'stretch' // Ensures all cards have same height
+    alignItems: 'stretch'
   }
 };

@@ -1,24 +1,23 @@
 import React, { useEffect } from 'react';
 import { useScrollToSection } from './hooks/useScrollToSection';
-  import { useAnimatedBackground } from './hooks/useAnimatedBackground';
 import { usePortfolio } from './context/PortfolioContext';
+import { useTheme } from './context/ThemeContext';
 
 import Navigation from './components/common/Navigation/Navigation';
-import AnimatedBackground from './components/common/AnimatedBackground';
 import Loader from './components/common/Loader';
-import ChatBot from './components/common/ChatBot/ChatBot'; // Add ChatBot
+import ChatBot from './components/common/ChatBot/ChatBot';
 import PreHero from './sections/PreHero/PreHero';
 import Hero from './sections/Hero/Hero';
 import About from './sections/About';
 import Projects from './sections/Projects/Projects';
 import Contact from './sections/Contact';
-import useNavbarVisibility from './hooks/useNavbarVisibility.js'; // ✅ FIXED: Default import
+import useNavbarVisibility from './hooks/useNavbarVisibility.js';
 
 const Portfolio = () => {
   const { currentSection, scrollToSection } = useScrollToSection();
   const isNavbarVisible = useNavbarVisibility();
-  //const { mountRef } = useAnimatedBackground();
   const { state, dispatch } = usePortfolio();
+  const { isDarkMode } = useTheme();
 
   const navSections = ['hero', 'about', 'projects', 'contact'];
 
@@ -32,37 +31,50 @@ const Portfolio = () => {
 
   return (
     <div className="portfolio-container">
-    <>
-      <Loader 
-        isVisible={state.isLoading} 
-        message="Initializing Matrix..." 
+      {/* ✨ NEW: Global Background Container */}
+      <div 
+        className="global-background"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'var(--global-background)',
+          zIndex: -1,
+          transition: 'background 0.3s ease'
+        }}
       />
-      
-      <div style={{ 
-        opacity: state.isLoading ? 0 : 1,
-        transition: 'opacity 0.5s ease-in-out'
-      }}>
-        {/*<AnimatedBackground mountRef={mountRef} />*/}
+
+      <>
+        <Loader 
+          isVisible={state.isLoading} 
+          message="Initializing Matrix..." 
+        />
         
-        <Navigation
-          sections={navSections}
-          onSectionChange={scrollToSection}
-          isVisible={isNavbarVisible}
-        />
+        <div style={{ 
+          opacity: state.isLoading ? 0 : 1,
+          transition: 'opacity 0.5s ease-in-out'
+        }}>
+          <Navigation
+            sections={navSections}
+            onSectionChange={scrollToSection}
+            isVisible={isNavbarVisible}
+          />
 
-        <PreHero onScrollToNext={scrollToSection} />
-        <Hero 
-          onScrollToNext={scrollToSection}
-          onNavigateToSection={scrollToSection}
-        />
-        <About />
-        <Projects />
-        <Contact />
+          <PreHero onScrollToNext={scrollToSection} />
+          <Hero 
+            onScrollToNext={scrollToSection}
+            onNavigateToSection={scrollToSection}
+          />
+          <About />
+          <Projects />
+          <Contact />
 
-        {/* Persistent Chat Bot */}
-        <ChatBot />
-      </div>
-    </>
+          {/* Persistent Chat Bot */}
+          <ChatBot />
+        </div>
+      </>
     </div>
   );
 };

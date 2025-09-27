@@ -5,9 +5,9 @@ import { smoothScrollTo } from '../../../utils/smoothScroll';
 import ThemeToggle from '../ThemeToggle';
 
 const Navigation = ({ 
-  sections = ['hero', 'about', 'projects', 'contact'], // Note: no 'prehero'
+  sections = ['hero', 'about', 'projects', 'contact'],
   onSectionChange = () => {},
-  isVisible = true // New prop to control visibility
+  isVisible = true
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -69,10 +69,9 @@ const Navigation = ({
       boxShadow: isScrolled ? '0 8px 32px rgba(0, 0, 0, 0.4)' : '0 4px 20px rgba(0, 0, 0, 0.2)',
       height: 'clamp(65px, 8vh, 80px)',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      transform: isVisible ? 'translateY(0)' : 'translateY(-100%)', // Slide animation
+      transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
       opacity: isVisible ? 1 : 0
     },
-    // ... rest of your existing styles
   };
 
   const getLinkStyle = (section) => {
@@ -107,7 +106,6 @@ const Navigation = ({
   return (
     <>
       <nav style={navStyles.nav}>
-        {/* Existing navigation JSX with same structure as before */}
         <div style={{
           position: 'absolute',
           top: 0,
@@ -219,13 +217,49 @@ const Navigation = ({
               color: '#06b6d4'
             }}
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </nav>
 
-      {/* Mobile Menu - Same as before */}
-      {/* ... existing mobile menu JSX ... */}
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 'clamp(65px, 8vh, 80px)',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 40,
+          background: 'rgba(15, 23, 42, 0.95)',
+          backdropFilter: 'blur(15px)',
+          padding: '2rem',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1.5rem',
+          animation: 'fadeIn 0.3s ease-out'
+        }}>
+          {sections.map((section) => (
+            <button
+              key={section}
+              onClick={() => handleSectionClick(section)}
+              style={{
+                fontSize: '1.5rem',
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+                color: activeSection === section ? '#06b6d4' : '#94a3b8',
+                transition: 'color 0.3s ease, transform 0.3s ease',
+                transform: activeSection === section ? 'scale(1.1)' : 'scale(1)',
+                cursor: 'pointer'
+              }}
+            >
+              {section.toUpperCase()}
+            </button>
+          ))}
+          <ThemeToggle />
+        </div>
+      )}
 
       {/* CSS Keyframes */}
       <style jsx>{`
@@ -262,6 +296,10 @@ const Navigation = ({
             box-shadow: 0 0 20px rgba(6, 182, 212, 1), 0 0 30px rgba(139, 92, 246, 0.5);
             opacity: 1;
           }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </>

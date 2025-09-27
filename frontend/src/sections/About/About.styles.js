@@ -4,10 +4,10 @@ export const aboutStyles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    //backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    /* ✨ REMOVED: backgroundColor - now uses global background */
     position: 'relative',
     zIndex: 30,
-    padding: '80px 20px' // Add horizontal padding here
+    padding: '80px 20px'
   },
   container: {
     maxWidth: '1152px',
@@ -25,12 +25,12 @@ export const aboutStyles = {
   title: {
     fontSize: '36px',
     fontWeight: 'bold',
-    color: '#06b6d4',
+    color: 'var(--accent-primary)',
     marginBottom: '24px',
     fontFamily: 'Monaco, "Lucida Console", monospace'
   },
   sectionSubtitle: {
-    color: '#06b6d4',
+    color: 'var(--accent-primary)',
     fontSize: '20px',
     marginBottom: '16px'
   },
@@ -43,26 +43,26 @@ export const aboutStyles = {
   item: {
     marginBottom: '16px',
     padding: '16px',
-    border: '1px solid rgba(6, 182, 212, 0.2)',
+    border: '1px solid var(--border-color)',
     borderRadius: '8px'
   },
   itemTitle: {
-    color: '#06b6d4',
+    color: 'var(--accent-primary)',
     fontSize: '16px',
     fontWeight: 'bold',
     marginBottom: '4px'
   },
   itemDetails: {
-    color: '#9ca3af',
+    color: 'var(--text-secondary)',
     fontSize: '14px'
   },
   itemCompany: {
-    color: '#d1d5db',
+    color: 'var(--text-primary)',
     fontSize: '14px',
     marginBottom: '8px'
   },
   itemDescription: {
-    color: '#9ca3af',
+    color: 'var(--text-secondary)',
     fontSize: '14px',
     lineHeight: 1.5
   },
@@ -75,7 +75,7 @@ export const aboutStyles = {
     marginBottom: '16px'
   },
   skillCategoryTitle: {
-    color: '#06b6d4',
+    color: 'var(--accent-primary)',
     fontSize: '16px',
     fontWeight: 'bold',
     marginBottom: '8px'
@@ -88,9 +88,9 @@ export const aboutStyles = {
   skillTag: {
     padding: '4px 12px',
     backgroundColor: 'rgba(6, 182, 212, 0.1)',
-    border: '1px solid rgba(6, 182, 212, 0.3)',
+    border: '1px solid var(--border-color)',
     borderRadius: '16px',
-    color: '#06b6d4',
+    color: 'var(--accent-primary)',
     fontSize: '12px',
     fontFamily: 'Monaco, "Lucida Console", monospace'
   }
