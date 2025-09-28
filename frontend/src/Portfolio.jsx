@@ -7,7 +7,7 @@ import Navigation from './components/common/Navigation/Navigation';
 import Loader from './components/common/Loader';
 import ChatBot from './components/common/ChatBot/ChatBot';
 import PreHero from './sections/PreHero/PreHero';
-import Hero from './sections/Hero/Hero';
+//import Hero from './sections/Hero/Hero';
 import About from './sections/About';
 import Projects from './sections/Projects/Projects';
 import Contact from './sections/Contact';
@@ -19,7 +19,7 @@ const Portfolio = () => {
   const { state, dispatch } = usePortfolio();
   const { isDarkMode } = useTheme();
 
-  const navSections = ['hero', 'about', 'projects', 'contact'];
+  const navSections = ['about', 'projects', 'contact']; //removed 'hero'
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -63,10 +63,10 @@ const Portfolio = () => {
           />
 
           <PreHero onScrollToNext={scrollToSection} />
-          <Hero 
+          {/*<Hero 
             onScrollToNext={scrollToSection}
             onNavigateToSection={scrollToSection}
-          />
+          />*/}
           <About />
           <Projects />
           <Contact />

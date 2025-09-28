@@ -1,4 +1,3 @@
-// src/services/api.js - Complete Implementation
 const API_BASE_URL = 'http://localhost:3000';
 
 class ApiService {

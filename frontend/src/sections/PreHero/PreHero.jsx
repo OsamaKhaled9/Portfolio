@@ -89,8 +89,8 @@ const PreHero = ({ onScrollToNext }) => {
         console.error('Failed to load profile:', error);
         // Fallback data
         setProfile({
-          name: 'Portfolio Owner',
-          title: 'Developer'
+          name: 'Osama Khaled',
+          title: 'Full-Stack Developer'
         });
       } finally {
         setLoading(false);
@@ -128,7 +128,7 @@ const PreHero = ({ onScrollToNext }) => {
     }
     
     if (onScrollToNext) {
-      onScrollToNext('hero');
+      onScrollToNext('about');
     }
   }, [onScrollToNext]);
 
@@ -188,7 +188,7 @@ const PreHero = ({ onScrollToNext }) => {
         <div className="welcome-text">
           {/* ✅ Use dynamic data instead of hardcoded text */}
           <h1 className="main-title">
-            {profile?.name}
+            {profile?.name} Osama Khaled Gamal
           </h1>
           <h2 className={`subtitle ${isDarkMode ? 'dark' : 'light'}`}>
             {profile?.title} Portfolio

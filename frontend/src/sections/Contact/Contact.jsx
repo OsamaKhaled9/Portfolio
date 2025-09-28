@@ -322,7 +322,7 @@ const Contact = () => {
               onMouseEnter={(e) => !isSubmitting && (e.currentTarget.style.transform = 'translateY(-1px)', e.currentTarget.style.boxShadow = '0 4px 12px rgba(6, 182, 212, 0.3)')}
               onMouseLeave={(e) => !isSubmitting && (e.currentTarget.style.transform = 'translateY(0)', e.currentTarget.style.boxShadow = 'none')}
             >
-              {isSubmitting ? '✈️ Sending...' : '🚀 Send Message'}
+              {isSubmitting ? 'Sending...' : 'Send Message'}
             </button>
           </form>
 
