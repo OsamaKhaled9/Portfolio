@@ -1,15 +1,24 @@
-// src/modules/content/controllers/profile.controller.ts
-import { Controller, Get, Put, Body, UseGuards, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Put, Body, UseGuards } from '@nestjs/common';
 import { ProfileService } from '../services/profile.service.js';
-import { UpdateProfileDto, ProfileResponseDto, PortfolioResponseDto } from '../dto/index.js';
+import { ProjectService } from '../services/project.service.js';
+import { SkillService } from '../services/skill.service.js';
+import { ExperienceService } from '../services/experience.service.js';
+import { CertificationService } from '../services/certification.service.js'; // ✅ NEW
+import { UpdateProfileDto } from '../dto/update-profile.dto.js';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 
 @Controller('api')
 export class ProfileController {
-  constructor(private readonly profileService: ProfileService) {}
+  constructor(
+    private readonly profileService: ProfileService,
+    private readonly projectService: ProjectService,
+    private readonly skillService: SkillService,
+    private readonly experienceService: ExperienceService,
+    private readonly certificationService: CertificationService, // ✅ NEW
+  ) {}
 
   @Get('profile')
-  async getProfile(): Promise<ProfileResponseDto> {
+  async getProfile() {
     try {
       const profile = await this.profileService.getProfile();
       return {
@@ -28,7 +37,7 @@ export class ProfileController {
 
   @Put('admin/profile')
   @UseGuards(JwtAuthGuard)
-  async updateProfile(@Body() updateProfileDto: UpdateProfileDto): Promise<ProfileResponseDto> {
+  async updateProfile(@Body() updateProfileDto: UpdateProfileDto) {
     try {
       const updatedProfile = await this.profileService.updateProfile(updateProfileDto);
       return {
@@ -45,13 +54,25 @@ export class ProfileController {
     }
   }
 
+  // ✅ ENHANCED: Include certifications in portfolio
   @Get('portfolio')
-  async getCompletePortfolio(): Promise<PortfolioResponseDto> {
+  async getCompletePortfolio() {
     try {
-      const portfolio = await this.profileService.getCompletePortfolio();
+      const profile = await this.profileService.getProfile();
+      const projects = await this.projectService.findAll();
+      const skills = await this.skillService.findAll();
+      const experience = await this.experienceService.findAll();
+      const certifications = await this.certificationService.findAll(); // ✅ NEW
+
       return {
         success: true,
-        data: portfolio,
+        data: {
+          profile,
+          projects,
+          skills,
+          experience,
+          certifications, // ✅ NEW
+        },
         message: 'Portfolio retrieved successfully',
       };
     } catch (error) {
@@ -62,6 +83,7 @@ export class ProfileController {
           projects: [],
           skills: [],
           experience: [],
+          certifications: [], // ✅ NEW
         },
         message: 'Failed to retrieve portfolio',
       };

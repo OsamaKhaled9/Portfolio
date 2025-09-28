@@ -1,4 +1,3 @@
-// src/main.ts - Final Fixed Version
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import AdminJS from 'adminjs';
@@ -10,6 +9,7 @@ import { Skill } from './modules/content/entities/skill.entity.js';
 import { Experience } from './modules/content/entities/experience.entity.js';
 import { ContentBlock } from './modules/content/entities/content-block.entity.js';
 import { Contact } from './modules/content/entities/contact.entity.js';
+import { Certification } from './modules/content/entities/certification.entity.js'; // ✅ ADD
 import session from 'express-session';
 import express from 'express';
 
@@ -25,53 +25,34 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // ✅ ENHANCED AdminJS with proper Profile configuration
+  // ✅ FIXED AdminJS configuration
   const adminJs = new AdminJS({
     rootPath: '/admin',
     resources: [
       {
         resource: Profile,
         options: {
-          // ✅ FIX: Remove 'name' from listProperties since it doesn't exist
-          listProperties: ['id', 'title', 'email', 'phone', 'location'],
-          showProperties: ['id', 'title', 'email', 'phone', 'location', 'heroContent', 'preHeroContent', 'aboutContent', 'description', 'resumeUrl', 'profileImageUrl', 'socialLinks'],
-          editProperties: ['title', 'email', 'phone', 'location', 'heroContent', 'preHeroContent', 'aboutContent', 'description', 'resumeUrl', 'profileImageUrl', 'socialLinks'],
+          listProperties: ['id', 'name', 'title', 'email', 'phone', 'location'], // ✅ Added name
+          showProperties: ['id', 'name', 'title', 'email', 'phone', 'location', 'heroContent', 'preHeroContent', 'aboutContent', 'description', 'resumeUrl', 'profileImageUrl', 'socialLinks'],
+          editProperties: ['name', 'title', 'email', 'phone', 'location', 'heroContent', 'preHeroContent', 'aboutContent', 'description', 'resumeUrl', 'profileImageUrl', 'socialLinks'],
           
-          // ✅ FIX: Disable create/delete for Profile (singleton)
+          // Profile singleton restrictions
           actions: {
-            new: {
-              isVisible: false, // Hide "Create New" button
-              isAccessible: false,
-            },
-            delete: {
-              isVisible: false, // Hide "Delete" button
-              isAccessible: false,
-            },
-            bulkDelete: {
-              isVisible: false,
-              isAccessible: false,
-            },
-            edit: {
-              isVisible: true, // Keep edit functionality
-              isAccessible: true,
-            },
-            show: {
-              isVisible: true, // Keep view functionality
-              isAccessible: true,
-            },
-            list: {
-              isVisible: true, // Keep list functionality
-              isAccessible: true,
-            }
+            new: { isVisible: false, isAccessible: false },
+            delete: { isVisible: false, isAccessible: false },
+            bulkDelete: { isVisible: false, isAccessible: false },
+            edit: { isVisible: true, isAccessible: true },
+            show: { isVisible: true, isAccessible: true },
+            list: { isVisible: true, isAccessible: true }
           },
           
-          // ✅ Custom properties for JSON fields
+          // ✅ FIXED: Simple property definitions
           properties: {
             socialLinks: {
               type: 'mixed',
-              description: 'JSON object for social media links (github, linkedin, twitter, etc.)'
-            },
-          },
+              description: 'JSON object: {"github": "url", "linkedin": "url", "twitter": "url"}'
+            }
+          }
         }
       },
       {
@@ -88,11 +69,10 @@ async function bootstrap() {
               ],
             },
             techStack: {
-              isArray: true,
               type: 'mixed',
-              description: 'JSON array of technologies used'
-            },
-          },
+              description: 'JSON array: ["React", "Node.js", "MySQL"]'
+            }
+          }
         }
       },
       {
@@ -124,11 +104,10 @@ async function bootstrap() {
               ],
             },
             technologies: {
-              isArray: true,
               type: 'mixed',
-              description: 'JSON array of technologies used'
-            },
-          },
+              description: 'JSON array: ["JavaScript", "Python", "Docker"]'
+            }
+          }
         }
       },
       {
@@ -136,16 +115,10 @@ async function bootstrap() {
         options: {
           listProperties: ['id', 'name', 'email', 'subject', 'status', 'createdAt'],
           showProperties: ['id', 'name', 'email', 'subject', 'message', 'status', 'createdAt'],
-          editProperties: ['status'], // Only allow editing status
+          editProperties: ['status'],
           actions: {
-            new: {
-              isVisible: false, // Don't allow creating contacts through admin
-              isAccessible: false,
-            },
-            delete: {
-              isVisible: true, // Allow deleting old messages
-              isAccessible: true,
-            },
+            new: { isVisible: false, isAccessible: false },
+            delete: { isVisible: true, isAccessible: true },
           },
           properties: {
             status: {
@@ -157,15 +130,34 @@ async function bootstrap() {
             },
             message: {
               type: 'textarea',
-              props: {
-                rows: 4,
-              },
-            },
-          },
+              props: { rows: 4 }
+            }
+          }
         }
       },
-      ContentBlock,
-    ],
+      // ✅ NEW: Certification resource
+      {
+        resource: Certification,
+        options: {
+          listProperties: ['id', 'name', 'issuer', 'completedDate', 'featured'],
+          editProperties: ['name', 'issuer', 'completedDate', 'credlyUrl', 'certificateImage', 'description', 'featured', 'order'],
+          properties: {
+            completedDate: {
+              type: 'date',
+            },
+            credlyUrl: {
+              type: 'url',
+              description: 'Optional Credly badge URL'
+            },
+            certificateImage: {
+              type: 'url',
+              description: 'Optional certificate image URL'
+            }
+          }
+        }
+      },
+      ContentBlock
+    ]
   });
 
   // Build AdminJS router with authentication

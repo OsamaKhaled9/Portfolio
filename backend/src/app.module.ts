@@ -11,7 +11,9 @@ import { Project } from './modules/content/entities/project.entity.js';
 import { Skill } from './modules/content/entities/skill.entity.js';
 import { Experience } from './modules/content/entities/experience.entity.js';
 import { ContentBlock } from './modules/content/entities/content-block.entity.js';
-import { Contact } from './modules/content/entities/contact.entity.js'; // ✅ NEW
+import { Contact } from './modules/content/entities/contact.entity.js'; 
+import { Certification } from './modules/content/entities/certification.entity.js'; // ✅ ADD
+
 
 // Import modules
 import { ContentModule } from './modules/content/content.module.js';
@@ -35,7 +37,7 @@ AdminJS.registerAdapter({
       username: process.env.DB_USERNAME || 'root',
       password: process.env.DB_PASSWORD || '',
       database: process.env.DB_DATABASE || 'portfiodb',
-      entities: [Profile, Project, Skill, Experience, ContentBlock, Contact], // ✅ Added Contact
+      entities: [Profile, Project, Skill, Experience, ContentBlock, Contact, Certification], // ✅ Add Certification
       synchronize: false, // ✅ Using migrations now
       logging: ['error'],
       retryAttempts: 3,

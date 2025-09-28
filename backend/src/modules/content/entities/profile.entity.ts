@@ -5,6 +5,12 @@ export class Profile extends BaseEntity {
   @PrimaryColumn()
    id: number = 1; // Always 1 - singleton record
 
+
+  // ✅ NEW: Name field
+  @Column({ nullable: true })
+  name?: string;
+
+
   @Column()
   title: string;
 
@@ -37,15 +43,8 @@ export class Profile extends BaseEntity {
   @Column({ nullable: true })
   profileImageUrl?: string;
 
-  // Social Links (stored as JSON)
   @Column({ type: 'json', nullable: true })
-  socialLinks?: {
-    github?: string;
-    linkedin?: string;
-    twitter?: string;
-    website?: string;
-    instagram?: string;
-  };
+  socialLinks?: Record<string, string>;
 
   // Metadata
   @CreateDateColumn()

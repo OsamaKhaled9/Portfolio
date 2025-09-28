@@ -1,38 +1,18 @@
-// src/modules/content/dto/update-profile.dto.ts
-import { IsEmail, IsOptional, IsString, IsUrl, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
-
-class SocialLinksDto {
-  @IsOptional()
-  @IsUrl()
-  github?: string;
-
-  @IsOptional()
-  @IsUrl()
-  linkedin?: string;
-
-  @IsOptional()
-  @IsUrl()
-  twitter?: string;
-
-  @IsOptional()
-  @IsUrl()
-  website?: string;
-
-  @IsOptional()
-  @IsUrl()
-  instagram?: string;
-}
+import { IsString, IsOptional, IsEmail, IsUrl, IsObject } from 'class-validator';
 
 export class UpdateProfileDto {
+  // ✅ NEW: Name field
+  @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
 
+  @IsOptional()
   @IsString()
-  title: string;
+  title?: string;
 
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
   @IsOptional()
   @IsString()
@@ -50,8 +30,9 @@ export class UpdateProfileDto {
   @IsString()
   preHeroContent?: string;
 
+  @IsOptional()
   @IsString()
-  aboutContent: string;
+  aboutContent?: string;
 
   @IsOptional()
   @IsString()
@@ -65,8 +46,8 @@ export class UpdateProfileDto {
   @IsUrl()
   profileImageUrl?: string;
 
+  // ✅ FIXED: Proper JSON object validation
   @IsOptional()
-  @ValidateNested()
-  @Type(() => SocialLinksDto)
-  socialLinks?: SocialLinksDto;
+  @IsObject()
+  socialLinks?: Record<string, string>;
 }
