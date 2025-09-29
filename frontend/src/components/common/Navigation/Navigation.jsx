@@ -262,7 +262,7 @@ const Navigation = ({
       )}
 
       {/* CSS Keyframes */}
-      <style jsx>{`
+      <style>{`
         @keyframes shimmer {
           0%, 100% { opacity: 0.5; transform: translateX(-100%); }
           50% { opacity: 1; transform: translateX(100%); }

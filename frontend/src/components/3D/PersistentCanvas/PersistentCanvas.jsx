@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+// In PersistentCanvas.jsx - MINIMAL approach
+import React, { useState, useCallback, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Physics } from '@react-three/rapier';
 import * as THREE from 'three';
@@ -6,7 +7,6 @@ import * as THREE from 'three';
 const PersistentCanvas = ({ children, ...canvasProps }) => {
   const [contextLost, setContextLost] = useState(false);
   const [canvasKey, setCanvasKey] = useState(0);
-  const canvasRef = useRef();
 
   const handleContextLost = useCallback((e) => {
     e.preventDefault();
@@ -17,7 +17,7 @@ const PersistentCanvas = ({ children, ...canvasProps }) => {
   const handleContextRestored = useCallback(() => {
     console.log('WebGL context restored, reinitializing...');
     setContextLost(false);
-    setCanvasKey(prev => prev + 1); // Force complete remount
+    setCanvasKey(prev => prev + 1);
   }, []);
 
   if (contextLost) {
@@ -49,11 +49,10 @@ const PersistentCanvas = ({ children, ...canvasProps }) => {
 
   return (
     <Canvas
-      key={canvasKey} // Force remount on context restore
-      ref={canvasRef}
+      key={canvasKey}
       gl={{
         alpha: true,
-        antialias: false, // Disable for better performance
+        antialias: false,
         powerPreference: "high-performance",
         preserveDrawingBuffer: false,
         failIfMajorPerformanceCaveat: false
@@ -62,16 +61,14 @@ const PersistentCanvas = ({ children, ...canvasProps }) => {
       onCreated={({ gl }) => {
         gl.setClearColor(new THREE.Color(0x000000), 0);
         
-        // Add context event listeners
-        gl.domElement.addEventListener('webglcontextlost', handleContextLost, false);
-        gl.domElement.addEventListener('webglcontextrestored', handleContextRestored, false);
+        // ✅ MINIMAL: Only add listeners, no manual cleanup
+        const canvas = gl.domElement;
+        canvas.addEventListener('webglcontextlost', handleContextLost, false);
+        canvas.addEventListener('webglcontextrestored', handleContextRestored, false);
       }}
       {...canvasProps}
     >
-      <Physics
-        gravity={[0, -9.81, 0]}
-        timeStep={1/60}
-      >
+      <Physics gravity={[0, -9.81, 0]} timeStep={1/60}>
         {children}
       </Physics>
     </Canvas>

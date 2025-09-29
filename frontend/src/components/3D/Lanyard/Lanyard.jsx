@@ -39,7 +39,7 @@ function WebGLContextManager({ children, onContextLost }) {
         return () => {
             canvas.removeEventListener('webglcontextlost', handleContextLost);
             canvas.removeEventListener('webglcontextrestored', handleContextRestored);
-            gl.dispose(); // Dispose renderer
+            //gl.dispose(); // Dispose renderer
         };
     }, [gl, onContextLost]);
 
@@ -74,6 +74,15 @@ function Band({ maxSpeed = 50, minSpeed = 0 }) {
   
   const { nodes, materials } = useGLTF(cardGLB);
   const texture = useTexture(lanyardTexture);
+  const [textureConfigured, setTextureConfigured] = useState(false);
+  useEffect(() => {
+      if (texture && !textureConfigured) {
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          texture.needsUpdate = true;
+          setTextureConfigured(true);
+      }
+  }, [texture, textureConfigured]);
   
   const [curve] = useState(
     () => new THREE.CatmullRomCurve3([
@@ -181,8 +190,11 @@ useEffect(() => {
     }
 });
 
-  curve.curveType = 'chordal';
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  //curve.curveType = 'chordal';
+  //texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+   useEffect(() => {
+    curve.curveType = 'chordal';
+  }, [curve]);
 
   return (
     <>
@@ -295,8 +307,14 @@ export default function Lanyard({
 }) {
     const [key, setKey] = useState(0);
     const [hasError, setHasError] = useState(false);
-
+   useEffect(() => {
+        console.log('Lanyard MOUNTED, key:', key);
+        return () => {
+            console.log('Lanyard UNMOUNTING, key:', key);
+        };
+    }, [key]);
     const handleContextLost = () => {
+      console.log('Context lost handler called');
         setHasError(true);
         onError?.();
     };
