@@ -188,7 +188,7 @@ const PreHero = ({ onScrollToNext }) => {
         <div className="welcome-text">
           {/* ✅ Use dynamic data instead of hardcoded text */}
           <h1 className="main-title">
-            {profile?.name} Osama Khaled Gamal
+            {profile?.name}
           </h1>
           <h2 className={`subtitle ${isDarkMode ? 'dark' : 'light'}`}>
             {profile?.title} Portfolio
