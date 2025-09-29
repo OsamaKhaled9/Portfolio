@@ -142,6 +142,46 @@ class ApiService {
     });
   }
 
+  // ===== CERTIFICATIONS METHODS =====
+  async getCertifications() {
+  return this.request('/api/certifications');
+}
+
+async getCertification(id) {
+  return this.request(`/api/certifications/${id}`);
+}
+async createCertification(data) {
+  return this.request('/api/admin/certifications', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
+      ...this.headers
+    }
+  });
+}
+
+async updateCertification(id, data) {
+  return this.request(`/api/admin/certifications/${id}`, {
+    method: 'PUT', 
+    body: JSON.stringify(data),
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
+      ...this.headers
+    }
+  });
+}
+
+async deleteCertification(id) {
+  return this.request(`/api/admin/certifications/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
+      ...this.headers
+    }
+  });
+}
+
   // ===== AUTHENTICATION METHODS =====
   async login(email, password) {
     return this.request('/api/auth/login', {
