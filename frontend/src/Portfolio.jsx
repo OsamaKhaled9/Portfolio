@@ -19,7 +19,7 @@ const Portfolio = () => {
   const { state, dispatch } = usePortfolio();
   const { isDarkMode } = useTheme();
 
-  const navSections = ['about', 'projects', 'contact']; //removed 'hero'
+  const navSections = ['about', 'projects', 'contact'];
 
   useEffect(() => {
     const timer = setTimeout(() => {

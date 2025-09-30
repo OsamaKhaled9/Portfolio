@@ -1,11 +1,9 @@
 /* PreHero Section Base Styles - BACKGROUND REMOVED */
 .prehero-section {
   height: 100vh;
-  height: calc(var(--vh, 1vh) * 100);
   width: 100vw;
   max-width: 100%;
-  min-height: 100vh;
-  min-height: calc(var(--vh, 1vh) * 100);
+  min-height: 95vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,7 +12,7 @@
   overflow: hidden;
   margin: 0;
   padding: 0;
-  /* ✨ REMOVED: background styling - now uses global background */
+  overflow-x: hidden;
   color: var(--text-primary);
   transition: color 0.3s ease;
   -webkit-user-select: none;

@@ -119,7 +119,7 @@ const PreHero = ({ onScrollToNext }) => {
 
   // Keep all existing handlers unchanged
   const handleEnterPortfolio = useCallback(() => {
-    const heroSection = document.getElementById('hero');
+    const heroSection = document.getElementById('about');
     if (heroSection) {
       heroSection.scrollIntoView({ 
         behavior: 'smooth',
@@ -132,6 +132,7 @@ const PreHero = ({ onScrollToNext }) => {
     }
   }, [onScrollToNext]);
 
+  
   const handleLanyardRetry = useCallback(() => {
     console.log('Retrying Lanyard component...');
     setLanyardKey(prev => prev + 1);

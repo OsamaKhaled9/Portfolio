@@ -2,15 +2,15 @@
 
 /* ===== BASE SECTION STYLES ===== */
 .about-section {
-  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   z-index: 30;
   padding: 80px 20px;
-  background: var(--bg-primary, #000000);
+  background: var(--global-background);
   color: var(--text-primary, #ffffff);
+  margin: 0;
 }
 
 .about-container {
