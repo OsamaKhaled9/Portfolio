@@ -8,17 +8,29 @@
   position: relative;
   z-index: 30;
   padding: 80px 20px;
-  background: var(--global-background);
+  
+  /* REMOVED: background: var(--global-background); */
+  /* Now transparent - inherits from .portfolio-root */
+  background: transparent !important;
+  
   color: var(--text-primary, #ffffff);
   margin: 0;
+  
+  /* ADDED: Prevent horizontal overflow */
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
-
 .about-container {
   max-width: 1280px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 clamp(16px, 3vw, 24px);
+  
+  /* ADDED: Prevent overflow */
+  box-sizing: border-box;
 }
+
 
 /* ===== LOADING STATE ===== */
 .about-section.loading {
@@ -157,13 +169,19 @@
 /* ===== TAB CONTENT CONTAINER ===== */
 .tab-content-container {
   min-height: 500px;
-  background: rgba(31, 41, 55, 0.4);
+  background: var(--glass-bg); /* Use glass instead of solid */
   border-radius: 20px;
-  padding: 40px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(6, 182, 212, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  padding: clamp(28px, 5vw, 40px);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
   animation: fadeIn 0.5s ease-in-out;
+  
+  /* ADDED: Prevent content overflow */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 @keyframes fadeIn {
@@ -322,14 +340,17 @@
 
 .skills-spiral {
   position: relative;
-  width: 350px;
-  height: 350px;
+  width: clamp(220px, 50vw, 350px); /* More responsive */
+  height: clamp(220px, 50vw, 350px);
   margin: 40px auto;
   background: radial-gradient(circle, rgba(6, 182, 212, 0.05) 0%, transparent 70%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  /* ADDED: Prevent overflow on small screens */
+  max-width: 100%;
 }
 
 .skill-spiral-item {
@@ -456,8 +477,14 @@
 /* Timeline */
 .timeline {
   position: relative;
-  padding-left: 32px;
+  padding-left: clamp(24px, 5vw, 32px);
+  
+  /* ADDED: Prevent content overflow */
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
+
 
 .timeline::before {
   content: '';
@@ -498,13 +525,20 @@
 }
 
 .timeline-content {
-  background: rgba(31, 41, 55, 0.6);
-  border: 1px solid rgba(6, 182, 212, 0.2);
+  background: var(--glass-bg);
+  border: 1px solid var(--border-color);
   border-radius: 16px;
-  padding: 28px;
+  padding: clamp(20px, 4vw, 28px);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  
+  /* ADDED: Prevent text overflow */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .timeline-content::before {
@@ -596,8 +630,11 @@
 /* Education Grid */
 .education-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: clamp(20px, 4vw, 24px);
+  
+  /* ADDED: Prevent overflow */
+  width: 100%;
 }
 
 .education-card {
@@ -666,9 +703,13 @@
 
 .skills-detailed-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: clamp(24px, 5vw, 32px);
+  
+  /* ADDED: Prevent overflow */
+  width: 100%;
 }
+
 
 .skill-category-detailed {
   background: rgba(31, 41, 55, 0.4);
@@ -776,9 +817,10 @@
   }
 }
 
+/* ===== MOBILE OPTIMIZATIONS ===== */
 @media (max-width: 768px) {
   .about-section {
-    padding: 60px 16px;
+    padding: clamp(50px, 8vh, 60px) clamp(12px, 3vw, 16px);
   }
   
   .tab-navigation {
@@ -790,47 +832,44 @@
   
   .tab-button {
     min-width: auto;
+    width: 100%;
     justify-content: center;
     text-align: center;
   }
   
   .tab-content-container {
-    padding: 24px;
+    padding: clamp(20px, 4vw, 24px);
+    min-height: auto;
   }
   
   .timeline {
-    padding-left: 24px;
+    padding-left: 20px;
   }
   
   .timeline-item {
-    padding-left: 28px;
+    padding-left: 24px;
   }
   
   .timeline-marker {
-    left: -38px;
+    left: -34px;
   }
   
   .company-period,
   .school-period {
     flex-direction: column;
     align-items: flex-start;
+    gap: 8px;
   }
   
-  .values-grid {
-    grid-template-columns: 1fr;
+  .values-grid,
+  .education-grid,
+  .skills-detailed-grid {
+    grid-template-columns: 1fr !important;
   }
   
   .skills-spiral {
-    width: 220px;
-    height: 220px;
-  }
-  
-  .skill-spiral-item {
-    transform: translate(-50%, -50%) rotate(var(--rotation)) translateX(90px) rotate(calc(-1 * var(--rotation)));
-  }
-  
-  .skills-detailed-grid {
-    grid-template-columns: 1fr;
+    width: min(280px, 90vw);
+    height: min(280px, 90vw);
   }
   
   .timeline-filters {
@@ -841,26 +880,22 @@
 
 @media (max-width: 480px) {
   .section-title {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 8vw, 2.5rem);
   }
   
   .tab-content-container {
-    padding: 20px;
+    padding: var(--space-lg);
   }
   
   .timeline-content,
   .education-card,
   .skill-category-detailed {
-    padding: 20px;
+    padding: var(--space-lg);
   }
   
   .skills-spiral {
-    width: 180px;
-    height: 180px;
-  }
-  
-  .skill-spiral-item {
-    transform: translate(-50%, -50%) rotate(var(--rotation)) translateX(70px) rotate(calc(-1 * var(--rotation)));
+    width: min(200px, 85vw);
+    height: min(200px, 85vw);
   }
   
   .skill-circle {
