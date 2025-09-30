@@ -1,0 +1,175 @@
+/* ============================================
+   THEME VARIABLES - Single Source of Truth
+   Applied via body.dark-theme / body.light-theme
+   ============================================ */
+
+/* ===== DARK THEME (Default) ===== */
+:root,
+body.dark-theme {
+  /* Backgrounds */
+  --bg-primary: #000000;
+  --bg-secondary: #111827;
+  --bg-tertiary: #1f2937;
+  --bg-quaternary: #374151;
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #9ca3af;
+  --text-quaternary: #6b7280;
+  
+  /* Accent Colors */
+  --accent-primary: #06b6d4; /* Cyan */
+  --accent-secondary: #8b5cf6; /* Purple */
+  --accent-tertiary: #10b981; /* Green */
+  --accent-error: #ef4444; /* Red */
+  --accent-warning: #f59e0b; /* Orange */
+  
+  /* Borders */
+  --border-color: rgba(6, 182, 212, 0.2);
+  --border-hover: rgba(6, 182, 212, 0.4);
+  --border-active: #06b6d4;
+  
+  /* Overlays */
+  --overlay-light: rgba(0, 0, 0, 0.3);
+  --overlay-medium: rgba(0, 0, 0, 0.6);
+  --overlay-heavy: rgba(0, 0, 0, 0.8);
+  
+  /* Glass Morphism */
+  --glass-bg: rgba(17, 24, 39, 0.6);
+  --glass-border: rgba(6, 182, 212, 0.2);
+  --glass-blur: blur(12px);
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(6, 182, 212, 0.3);
+  
+  /* ===== UNIFIED BACKGROUND FOR SINGLE-PAGE FEEL ===== */
+  --global-background: linear-gradient(
+    135deg,
+    #000000 0%,
+    #0a0f1e 25%,
+    #111827 50%,
+    #0a0f1e 75%,
+    #000000 100%
+  );
+  
+  /* Section overlays (for depth without breaking unified bg) */
+  --section-overlay: rgba(0, 0, 0, 0.3);
+  --section-overlay-light: rgba(0, 0, 0, 0.1);
+  
+  /* RGB values for rgba() usage */
+  --bg-secondary-rgb: 17, 24, 39;
+  --accent-primary-rgb: 6, 182, 212;
+  --accent-secondary-rgb: 139, 92, 246;
+}
+
+/* ===== LIGHT THEME ===== */
+body.light-theme {
+  /* Backgrounds */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #e2e8f0;
+  --bg-quaternary: #cbd5e1;
+  
+  /* Text Colors */
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --text-quaternary: #94a3b8;
+  
+  /* Accent Colors */
+  --accent-primary: #0891b2; /* Darker cyan for light mode */
+  --accent-secondary: #7c3aed; /* Darker purple */
+  --accent-tertiary: #059669; /* Darker green */
+  --accent-error: #dc2626;
+  --accent-warning: #d97706;
+  
+  /* Borders */
+  --border-color: rgba(8, 145, 178, 0.3);
+  --border-hover: rgba(8, 145, 178, 0.5);
+  --border-active: #0891b2;
+  
+  /* Overlays */
+  --overlay-light: rgba(255, 255, 255, 0.3);
+  --overlay-medium: rgba(255, 255, 255, 0.6);
+  --overlay-heavy: rgba(255, 255, 255, 0.8);
+  
+  /* Glass Morphism */
+  --glass-bg: rgba(248, 250, 252, 0.7);
+  --glass-border: rgba(8, 145, 178, 0.3);
+  --glass-blur: blur(12px);
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --shadow-glow: 0 0 20px rgba(8, 145, 178, 0.2);
+  
+  /* Unified background for light mode */
+  --global-background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f0f9ff 25%,
+    #f8fafc 50%,
+    #f0f9ff 75%,
+    #ffffff 100%
+  );
+  
+  /* Section overlays */
+  --section-overlay: rgba(255, 255, 255, 0.4);
+  --section-overlay-light: rgba(255, 255, 255, 0.2);
+  
+  /* RGB values */
+  --bg-secondary-rgb: 248, 250, 252;
+  --accent-primary-rgb: 8, 145, 178;
+  --accent-secondary-rgb: 124, 58, 237;
+}
+
+/* ===== THEME TRANSITION ===== */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+* {
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* ===== GRADIENT UTILITIES ===== */
+.gradient-text {
+  background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-border {
+  border-image: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary)) 1;
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+}
+
+/* ===== COLOR UTILITIES ===== */
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-tertiary { color: var(--text-tertiary); }
+.text-accent { color: var(--accent-primary); }
+.text-accent-secondary { color: var(--accent-secondary); }
+
+.bg-primary { background-color: var(--bg-primary); }
+.bg-secondary { background-color: var(--bg-secondary); }
+.bg-tertiary { background-color: var(--bg-tertiary); }
+.bg-glass { 
+  background-color: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+/* ===== BORDER UTILITIES ===== */
+.border-default { border-color: var(--border-color); }
+.border-hover:hover { border-color: var(--border-hover); }
+.border-active { border-color: var(--border-active); }
