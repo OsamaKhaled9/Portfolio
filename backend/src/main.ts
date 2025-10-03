@@ -9,9 +9,7 @@ import { Skill } from './modules/content/entities/skill.entity.js';
 import { Experience } from './modules/content/entities/experience.entity.js';
 import { ContentBlock } from './modules/content/entities/content-block.entity.js';
 import { Contact } from './modules/content/entities/contact.entity.js';
-import { Certification } from './modules/content/entities/certification.entity.js'; // ✅ ADD
-import session from 'express-session';
-import express from 'express';
+import { Certification } from './modules/content/entities/certification.entity.js';
 
 AdminJS.registerAdapter({ Database, Resource });
 
@@ -20,7 +18,7 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:59412'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
@@ -32,10 +30,37 @@ async function bootstrap() {
       {
         resource: Profile,
         options: {
-          listProperties: ['id', 'name', 'title', 'email', 'phone', 'location'], // ✅ Added name
-          showProperties: ['id', 'name', 'title', 'email', 'phone', 'location', 'heroContent', 'preHeroContent', 'aboutContent', 'description', 'resumeUrl', 'profileImageUrl', 'socialLinks'],
-          editProperties: ['name', 'title', 'email', 'phone', 'location', 'heroContent', 'preHeroContent', 'aboutContent', 'description', 'resumeUrl', 'profileImageUrl', 'socialLinks'],
-          
+          listProperties: ['id', 'name', 'title', 'email', 'phone', 'location'],
+          showProperties: [
+            'id',
+            'name',
+            'title',
+            'email',
+            'phone',
+            'location',
+            'heroContent',
+            'preHeroContent',
+            'aboutContent',
+            'description',
+            'resumeUrl',
+            'profileImageUrl',
+            'socialLinks',
+          ],
+          editProperties: [
+            'name',
+            'title',
+            'email',
+            'phone',
+            'location',
+            'heroContent',
+            'preHeroContent',
+            'aboutContent',
+            'description',
+            'resumeUrl',
+            'profileImageUrl',
+            'socialLinks',
+          ],
+
           // Profile singleton restrictions
           actions: {
             new: { isVisible: false, isAccessible: false },
@@ -43,23 +68,34 @@ async function bootstrap() {
             bulkDelete: { isVisible: false, isAccessible: false },
             edit: { isVisible: true, isAccessible: true },
             show: { isVisible: true, isAccessible: true },
-            list: { isVisible: true, isAccessible: true }
+            list: { isVisible: true, isAccessible: true },
           },
-          
-          // ✅ FIXED: Simple property definitions
+
           properties: {
             socialLinks: {
               type: 'mixed',
-              description: 'JSON object: {"github": "url", "linkedin": "url", "twitter": "url"}'
-            }
-          }
-        }
+              description:
+                'JSON object: {"github": "url", "linkedin": "url", "twitter": "url"}',
+            },
+          },
+        },
       },
       {
         resource: Project,
         options: {
           listProperties: ['id', 'title', 'category', 'featured', 'order'],
-          editProperties: ['title', 'description', 'githubUrl', 'liveUrl', 'imageUrl', 'featured', 'techStack', 'category', 'order', 'status'],
+          editProperties: [
+            'title',
+            'description',
+            'githubUrl',
+            'liveUrl',
+            'imageUrl',
+            'featured',
+            'techStack',
+            'category',
+            'order',
+            'status',
+          ],
           properties: {
             category: {
               availableValues: [
@@ -70,10 +106,10 @@ async function bootstrap() {
             },
             techStack: {
               type: 'mixed',
-              description: 'JSON array: ["React", "Node.js", "MySQL"]'
-            }
-          }
-        }
+              description: 'JSON array: ["React", "Node.js", "MySQL"]',
+            },
+          },
+        },
       },
       {
         resource: Skill,
@@ -82,19 +118,34 @@ async function bootstrap() {
           properties: {
             category: {
               availableValues: [
-                { value: 'Programming Languages', label: 'Programming Languages' },
+                {
+                  value: 'Programming Languages',
+                  label: 'Programming Languages',
+                },
                 { value: 'Frameworks & Tools', label: 'Frameworks & Tools' },
                 { value: 'Cloud & Databases', label: 'Cloud & Databases' },
               ],
             },
           },
-        }
+        },
       },
       {
         resource: Experience,
         options: {
           listProperties: ['id', 'company', 'position', 'type', 'isCurrent'],
-          editProperties: ['company', 'position', 'description', 'startDate', 'endDate', 'isCurrent', 'location', 'technologies', 'type', 'institution', 'degree'],
+          editProperties: [
+            'company',
+            'position',
+            'description',
+            'startDate',
+            'endDate',
+            'isCurrent',
+            'location',
+            'technologies',
+            'type',
+            'institution',
+            'degree',
+          ],
           properties: {
             type: {
               availableValues: [
@@ -105,16 +156,31 @@ async function bootstrap() {
             },
             technologies: {
               type: 'mixed',
-              description: 'JSON array: ["JavaScript", "Python", "Docker"]'
-            }
-          }
-        }
+              description: 'JSON array: ["JavaScript", "Python", "Docker"]',
+            },
+          },
+        },
       },
       {
         resource: Contact,
         options: {
-          listProperties: ['id', 'name', 'email', 'subject', 'status', 'createdAt'],
-          showProperties: ['id', 'name', 'email', 'subject', 'message', 'status', 'createdAt'],
+          listProperties: [
+            'id',
+            'name',
+            'email',
+            'subject',
+            'status',
+            'createdAt',
+          ],
+          showProperties: [
+            'id',
+            'name',
+            'email',
+            'subject',
+            'message',
+            'status',
+            'createdAt',
+          ],
           editProperties: ['status'],
           actions: {
             new: { isVisible: false, isAccessible: false },
@@ -130,41 +196,49 @@ async function bootstrap() {
             },
             message: {
               type: 'textarea',
-              props: { rows: 4 }
-            }
-          }
-        }
+              props: { rows: 4 },
+            },
+          },
+        },
       },
-      // ✅ NEW: Certification resource
       {
         resource: Certification,
         options: {
           listProperties: ['id', 'name', 'issuer', 'completedDate', 'featured'],
-          editProperties: ['name', 'issuer', 'completedDate', 'credlyUrl', 'certificateImage', 'description', 'featured', 'order'],
+          editProperties: [
+            'name',
+            'issuer',
+            'completedDate',
+            'credlyUrl',
+            'certificateImage',
+            'description',
+            'featured',
+            'order',
+          ],
           properties: {
             completedDate: {
               type: 'date',
             },
             credlyUrl: {
               type: 'url',
-              description: 'Optional Credly badge URL'
+              description: 'Optional Credly badge URL',
             },
             certificateImage: {
               type: 'url',
-              description: 'Optional certificate image URL'
-            }
-          }
-        }
+              description: 'Optional certificate image URL',
+            },
+          },
+        },
       },
-      ContentBlock
-    ]
+      ContentBlock,
+    ],
   });
 
   // Build AdminJS router with authentication
   const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
     adminJs,
     {
-      authenticate: async (email: string, password: string) => {
+      authenticate: (email: string, password: string) => {
         if (email === 'admin@admin.com' && password === 'password') {
           return { email: 'admin@admin.com' };
         }
@@ -178,7 +252,7 @@ async function bootstrap() {
       resave: true,
       saveUninitialized: true,
       secret: 'supersecret-session-key-32-chars-min',
-    }
+    },
   );
 
   app.use(adminJs.options.rootPath, adminRouter);
@@ -188,4 +262,5 @@ async function bootstrap() {
   console.log('AdminJS available at http://localhost:3000/admin');
   console.log('API available at http://localhost:3000/api/*');
 }
-bootstrap();
+
+void bootstrap();
