@@ -29,7 +29,14 @@ import { EmailModule } from '../email/email.module.js';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Profile, Project, Skill, Experience, Contact, Certification]), // ✅ Add Certification
+    TypeOrmModule.forFeature([
+      Profile,
+      Project,
+      Skill,
+      Experience,
+      Contact,
+      Certification,
+    ]), // ✅ Add Certification
     ConfigModule,
     EmailModule,
   ],

@@ -1,5 +1,12 @@
 // src/modules/content/entities/experience.entity.ts
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Experience extends BaseEntity {
@@ -39,7 +46,7 @@ export class Experience extends BaseEntity {
   @Column({ nullable: true })
   institution?: string;
 
-  // ✅ NEW: For education entries  
+  // ✅ NEW: For education entries
   @Column({ nullable: true })
   degree?: string;
 

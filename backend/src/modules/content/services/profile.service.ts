@@ -2,7 +2,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeepPartial } from 'typeorm';
-import { Profile,Project,Skill,Experience } from '../entities/index.js';
+import { Profile, Project, Skill, Experience } from '../entities/index.js';
 import { UpdateProfileDto } from '../dto/index.js';
 
 @Injectable()
@@ -20,11 +20,11 @@ export class ProfileService {
 
   async getProfile(): Promise<Profile> {
     let profile = await this.profileRepository.findOne({ where: { id: 1 } });
-    
+
     if (!profile) {
       profile = await this.createDefaultProfile();
     }
-    
+
     return profile;
   }
 
@@ -43,7 +43,7 @@ export class ProfileService {
       aboutContent: 'Write your about section here...',
       description: 'Passionate backend engineer...',
     } as DeepPartial<Profile>);
-    
+
     return await this.profileRepository.save(defaultProfile);
   }
 
@@ -52,15 +52,15 @@ export class ProfileService {
     try {
       const [profile, projects, skills, experience] = await Promise.all([
         this.getProfile(),
-        this.projectRepository.find({ 
-          order: { featured: 'DESC', createdAt: 'DESC' }
+        this.projectRepository.find({
+          order: { featured: 'DESC', createdAt: 'DESC' },
         }),
-        this.skillRepository.find({ 
-          order: { category: 'ASC', name: 'ASC' }
+        this.skillRepository.find({
+          order: { category: 'ASC', name: 'ASC' },
         }),
-        this.experienceRepository.find({ 
-          order: { isCurrent: 'DESC', startDate: 'DESC' }
-        })
+        this.experienceRepository.find({
+          order: { isCurrent: 'DESC', startDate: 'DESC' },
+        }),
       ]);
 
       return {

@@ -1,8 +1,19 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards, ParseIntPipe,UsePipes,ValidationPipe} from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+  UseGuards,
+  ParseIntPipe,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 import { ExperienceService } from '../services/experience.service.js';
-import { CreateExperienceDto ,UpdateExperienceDto } from '../dto/index.js';
-
+import { CreateExperienceDto, UpdateExperienceDto } from '../dto/index.js';
 
 @Controller('api')
 export class ExperienceController {
@@ -51,7 +62,8 @@ export class ExperienceController {
   @UsePipes(new ValidationPipe())
   async create(@Body() createExperienceDto: CreateExperienceDto) {
     try {
-      const experience = await this.experienceService.create(createExperienceDto);
+      const experience =
+        await this.experienceService.create(createExperienceDto);
       return {
         success: true,
         data: experience,
@@ -71,10 +83,13 @@ export class ExperienceController {
   @UsePipes(new ValidationPipe())
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateExperienceDto: UpdateExperienceDto
+    @Body() updateExperienceDto: UpdateExperienceDto,
   ) {
     try {
-      const experience = await this.experienceService.update(id, updateExperienceDto);
+      const experience = await this.experienceService.update(
+        id,
+        updateExperienceDto,
+      );
       return {
         success: true,
         data: experience,

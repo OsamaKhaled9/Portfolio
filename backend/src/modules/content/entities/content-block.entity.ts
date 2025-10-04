@@ -1,6 +1,6 @@
 import { BaseEntity, Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
-export class ContentBlock extends BaseEntity{
+export class ContentBlock extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

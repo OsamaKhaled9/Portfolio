@@ -1,9 +1,20 @@
 // src/modules/content/controllers/project.controller.ts
-import { 
-  Controller, Get, Post, Put, Delete, Param, Body, UseGuards, ParseIntPipe,UsePipes,ValidationPipe} from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+  UseGuards,
+  ParseIntPipe,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 import { ProjectService } from '../services/project.service.js';
-import { CreateProjectDto ,UpdateProjectDto } from '../dto/index.js';
+import { CreateProjectDto, UpdateProjectDto } from '../dto/index.js';
 
 @Controller('api')
 export class ProjectController {
@@ -72,7 +83,7 @@ export class ProjectController {
   @UsePipes(new ValidationPipe())
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateProjectDto: UpdateProjectDto
+    @Body() updateProjectDto: UpdateProjectDto,
   ) {
     try {
       const project = await this.projectService.update(id, updateProjectDto);

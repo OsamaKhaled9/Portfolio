@@ -14,8 +14,8 @@ export class ProjectService {
   ) {}
 
   async findAll(): Promise<Project[]> {
-    return await this.projectRepository.find({ 
-      order: { featured: 'DESC', createdAt: 'DESC' }
+    return await this.projectRepository.find({
+      order: { featured: 'DESC', createdAt: 'DESC' },
     });
   }
 
@@ -32,7 +32,10 @@ export class ProjectService {
     return await this.projectRepository.save(project);
   }
 
-  async update(id: number, updateProjectDto: UpdateProjectDto): Promise<Project> {
+  async update(
+    id: number,
+    updateProjectDto: UpdateProjectDto,
+  ): Promise<Project> {
     const project = await this.findOne(id);
     Object.assign(project, updateProjectDto);
     return await this.projectRepository.save(project);

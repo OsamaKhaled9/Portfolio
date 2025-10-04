@@ -7,4 +7,4 @@ export * from './create-skill.dto.js';
 export * from './update-skill.dto.js';
 export * from './create-experience.dto.js';
 export * from './update-experience.dto.js';
-export * from './create-contact.dto.js'; 
+export * from './create-contact.dto.js';

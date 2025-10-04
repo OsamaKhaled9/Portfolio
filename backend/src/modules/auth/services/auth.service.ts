@@ -10,10 +10,15 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async login(email: string, password: string): Promise<{ access_token: string }> {
+  async login(
+    email: string,
+    password: string,
+  ): Promise<{ access_token: string }> {
     // Simple hardcoded admin check (replace with database later)
-    const adminEmail = this.configService.get<string>('ADMIN_EMAIL') || 'admin@admin.com';
-    const adminPassword = this.configService.get<string>('ADMIN_PASSWORD') || 'password';
+    const adminEmail =
+      this.configService.get<string>('ADMIN_EMAIL') || 'admin@admin.com';
+    const adminPassword =
+      this.configService.get<string>('ADMIN_PASSWORD') || 'password';
 
     if (email !== adminEmail || password !== adminPassword) {
       throw new UnauthorizedException('Invalid credentials');

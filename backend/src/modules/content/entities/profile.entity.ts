@@ -1,15 +1,20 @@
-import { BaseEntity,Entity, PrimaryColumn, Column,UpdateDateColumn,CreateDateColumn  } from 'typeorm';
+import {
+  BaseEntity,
+  Entity,
+  PrimaryColumn,
+  Column,
+  UpdateDateColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity('profile')
 export class Profile extends BaseEntity {
   @PrimaryColumn()
-   id: number = 1; // Always 1 - singleton record
-
+  id: number = 1; // Always 1 - singleton record
 
   // ✅ NEW: Name field
   @Column({ nullable: true })
   name?: string;
-
 
   @Column()
   title: string;

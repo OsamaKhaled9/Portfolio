@@ -1,5 +1,4 @@
-// In PersistentCanvas.jsx - MINIMAL approach
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Physics } from '@react-three/rapier';
 import * as THREE from 'three';

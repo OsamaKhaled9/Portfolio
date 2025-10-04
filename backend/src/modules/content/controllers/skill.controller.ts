@@ -1,5 +1,17 @@
 // src/modules/content/controllers/skill.controller.ts
-import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards, ParseIntPipe,UsePipes,ValidationPipe} from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+  UseGuards,
+  ParseIntPipe,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 import { SkillService } from '../services/skill.service.js';
 import { CreateSkillDto } from '../dto/create-skill.dto.js';
@@ -99,7 +111,7 @@ export class SkillController {
   @UsePipes(new ValidationPipe())
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateSkillDto: UpdateSkillDto
+    @Body() updateSkillDto: UpdateSkillDto,
   ) {
     try {
       const skill = await this.skillService.update(id, updateSkillDto);

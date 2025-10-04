@@ -1,23 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { useScrollToSection } from './hooks/useScrollToSection';
 import { usePortfolio } from './context/PortfolioContext';
-import { useTheme } from './context/ThemeContext';
 
+// Always import (critical path)
 import Navigation from './components/common/Navigation/Navigation';
 import Loader from './components/common/Loader';
 import ChatBot from './components/common/ChatBot/ChatBot';
 import PreHero from './sections/PreHero/PreHero';
-//import Hero from './sections/Hero/Hero';
-import About from './sections/About';
-import Projects from './sections/Projects/Projects';
-import Contact from './sections/Contact/Contact';
-import useNavbarVisibility from './hooks/useNavbarVisibility.js';
+
+// Lazy load sections (loaded after PreHero)
+const About = lazy(() => import('./sections/About'));
+const Projects = lazy(() => import('./sections/Projects/Projects'));
+const Contact = lazy(() => import('./sections/Contact/Contact'));
 
 const Portfolio = () => {
-  const { currentSection, scrollToSection } = useScrollToSection();
+  const { scrollToSection } = useScrollToSection();
   const isNavbarVisible = useNavbarVisibility();
   const { state, dispatch } = usePortfolio();
-  const { isDarkMode } = useTheme();
+  //const { isDarkMode } = useTheme();
 
   const navSections = ['about', 'projects', 'contact'];
 
@@ -30,53 +30,57 @@ const Portfolio = () => {
   }, [dispatch]);
 
   return (
-    <div className="portfolio-container">
-      {/* ✨ NEW: Global Background Container */}
-      <div 
-        className="global-background"
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'var(--global-background)',
-          zIndex: -1,
-          transition: 'background 0.3s ease'
-        }}
-      />
-
-      <>
-        <Loader 
-          isVisible={state.isLoading} 
-          message="Initializing Matrix..." 
+    // Use .portfolio-root instead of .portfolio-container
+    <div className="portfolio-root">
+      {/* Navigation - Only show when not loading */}
+      {!state.isLoading && (
+        <Navigation
+          sections={navSections}
+          onSectionChange={scrollToSection}
+          isVisible={isNavbarVisible}
         />
-        
-        <div style={{ 
-          opacity: state.isLoading ? 0 : 1,
-          transition: 'opacity 0.5s ease-in-out'
-        }}>
-          <Navigation
-            sections={navSections}
-            onSectionChange={scrollToSection}
-            isVisible={isNavbarVisible}
-          />
+      )}
 
-          <PreHero onScrollToNext={scrollToSection} />
-          {/*<Hero 
-            onScrollToNext={scrollToSection}
-            onNavigateToSection={scrollToSection}
-          />*/}
+      {/* Loader */}
+      <Loader 
+        isVisible={state.isLoading} 
+        message="Initializing Matrix..." 
+      />
+      
+      {/* Main Content */}
+      <div style={{ 
+        opacity: state.isLoading ? 0 : 1,
+        transition: 'opacity 0.5s ease-in-out'
+      }}>
+        {/* PreHero - Always loads first */}
+        <PreHero onScrollToNext={scrollToSection} />
+
+        {/* Lazy-loaded sections with fallback */}
+        <Suspense fallback={
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '100vh',
+            color: 'var(--accent-primary)',
+            fontFamily: 'var(--font-mono)'
+          }}>
+            <div className="loading-spinner" />
+          </div>
+        }>
           <About />
           <Projects />
           <Contact />
+        </Suspense>
 
-          {/* Persistent Chat Bot */}
-          <ChatBot />
-        </div>
-      </>
+        {/* Persistent Chat Bot */}
+        <ChatBot />
+      </div>
     </div>
   );
 };
+
+// Add missing import
+import useNavbarVisibility from './hooks/useNavbarVisibility.js';
 
 export default Portfolio;

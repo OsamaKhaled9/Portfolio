@@ -12,26 +12,35 @@ export class CertificationService {
     private certificationRepository: Repository<Certification>,
   ) {}
 
-  async create(createCertificationDto: CreateCertificationDto): Promise<Certification> {
-    const certification = this.certificationRepository.create(createCertificationDto);
+  async create(
+    createCertificationDto: CreateCertificationDto,
+  ): Promise<Certification> {
+    const certification = this.certificationRepository.create(
+      createCertificationDto,
+    );
     return await this.certificationRepository.save(certification);
   }
 
   async findAll(): Promise<Certification[]> {
     return await this.certificationRepository.find({
-      order: { featured: 'DESC', order: 'ASC', completedDate: 'DESC' }
+      order: { featured: 'DESC', order: 'ASC', completedDate: 'DESC' },
     });
   }
 
   async findOne(id: number): Promise<Certification> {
-    const certification = await this.certificationRepository.findOne({ where: { id } });
+    const certification = await this.certificationRepository.findOne({
+      where: { id },
+    });
     if (!certification) {
       throw new NotFoundException(`Certification with ID ${id} not found`);
     }
     return certification;
   }
 
-  async update(id: number, updateCertificationDto: UpdateCertificationDto): Promise<Certification> {
+  async update(
+    id: number,
+    updateCertificationDto: UpdateCertificationDto,
+  ): Promise<Certification> {
     const certification = await this.findOne(id);
     Object.assign(certification, updateCertificationDto);
     return await this.certificationRepository.save(certification);

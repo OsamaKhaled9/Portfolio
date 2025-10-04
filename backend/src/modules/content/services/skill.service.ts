@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Skill } from '../entities/skill.entity.js';
-import { CreateSkillDto ,UpdateSkillDto } from '../dto/index.js';
+import { CreateSkillDto, UpdateSkillDto } from '../dto/index.js';
 
 @Injectable()
 export class SkillService {
@@ -12,8 +12,8 @@ export class SkillService {
   ) {}
 
   async findAll(): Promise<Skill[]> {
-    return await this.skillRepository.find({ 
-      order: { category: 'ASC', name: 'ASC' }
+    return await this.skillRepository.find({
+      order: { category: 'ASC', name: 'ASC' },
     });
   }
 

@@ -24,13 +24,12 @@ function WebGLContextManager({ children, onContextLost }) {
             console.log('WebGL context lost');
             event.preventDefault();
             setContextLost(true);
-            onContextLost(); // Notify parent to handle retry
+            onContextLost();
         };
 
         const handleContextRestored = () => {
             console.log('WebGL context restored');
             setContextLost(false);
-            // Reinitialize resources if needed
         };
 
         canvas.addEventListener('webglcontextlost', handleContextLost);
@@ -39,7 +38,6 @@ function WebGLContextManager({ children, onContextLost }) {
         return () => {
             canvas.removeEventListener('webglcontextlost', handleContextLost);
             canvas.removeEventListener('webglcontextrestored', handleContextRestored);
-            //gl.dispose(); // Dispose renderer
         };
     }, [gl, onContextLost]);
 
@@ -75,6 +73,7 @@ function Band({ maxSpeed = 50, minSpeed = 0 }) {
   const { nodes, materials } = useGLTF(cardGLB);
   const texture = useTexture(lanyardTexture);
   const [textureConfigured, setTextureConfigured] = useState(false);
+  
   useEffect(() => {
       if (texture && !textureConfigured) {
           texture.wrapS = THREE.RepeatWrapping;
@@ -112,26 +111,29 @@ function Band({ maxSpeed = 50, minSpeed = 0 }) {
     }
   }, [hovered, dragged]);
 
-useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
         setIsSmall(window.innerWidth < 1024);
     };
     window.addEventListener('resize', handleResize);
 
+    // Store ref values in closure for cleanup
+    const currentBand = band.current;
+
     return () => {
         window.removeEventListener('resize', handleResize);
-        // Dispose resources
-        if (band.current?.geometry) {
-            band.current.geometry.dispose();
+        // Dispose resources using closure variable
+        if (currentBand?.geometry) {
+            currentBand.geometry.dispose();
         }
-        if (band.current?.material) {
-            band.current.material.dispose();
-            if (band.current.material.map) {
-                band.current.material.map.dispose();
+        if (currentBand?.material) {
+            currentBand.material.dispose();
+            if (currentBand.material.map) {
+                currentBand.material.map.dispose();
             }
         }
     };
-}, []);
+  }, []);
 
   useFrame((state, delta) => {
     if (dragged) {
@@ -161,8 +163,7 @@ useEffect(() => {
             );
         });
 
-      
-       const newPoints = [
+        const newPoints = [
             j3.current.translation(),
             j2.current.lerped,
             j1.current.lerped,
@@ -178,7 +179,7 @@ useEffect(() => {
             curve.points[2].copy(j1.current.lerped);
             curve.points[3].copy(fixed.current.translation());
             try {
-                band.current.geometry.setPoints(curve.getPoints(16)); // Reduced to 16
+                band.current.geometry.setPoints(curve.getPoints(16));
             } catch (error) {
                 console.error('Error updating band geometry:', error);
             }
@@ -188,11 +189,9 @@ useEffect(() => {
         rot.copy(card.current.rotation());
         card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
     }
-});
+  });
 
-  //curve.curveType = 'chordal';
-  //texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-   useEffect(() => {
+  useEffect(() => {
     curve.curveType = 'chordal';
   }, [curve]);
 
@@ -231,14 +230,14 @@ useEffect(() => {
             }}
           >
             <mesh geometry={nodes.card.geometry}>
- <meshPhysicalMaterial
-    map={materials.base.map}
-    map-anisotropy={4} // Reduced from 16
-    clearcoat={1}
-    clearcoatRoughness={0.15}
-    roughness={0.9}
-    metalness={0.8}
-/>
+              <meshPhysicalMaterial
+                map={materials.base.map}
+                map-anisotropy={4}
+                clearcoat={1}
+                clearcoatRoughness={0.15}
+                roughness={0.9}
+                metalness={0.8}
+              />
             </mesh>
             <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
@@ -247,15 +246,15 @@ useEffect(() => {
       </group>
       <mesh ref={band}>
         <meshLineGeometry />
-<meshLineMaterial
-    color="white"
-    depthTest={false}
-    resolution={isSmall ? [512, 1024] : [512, 512]} // Lower resolution
-    useMap
-    map={texture}
-    repeat={[-4, 1]}
-    lineWidth={1}
-/>
+        <meshLineMaterial
+          color="white"
+          depthTest={false}
+          resolution={isSmall ? [512, 1024] : [512, 512]}
+          useMap
+          map={texture}
+          repeat={[-4, 1]}
+          lineWidth={1}
+        />
       </mesh>
     </>
   );
@@ -297,24 +296,24 @@ function ErrorFallback({ onRetry }) {
 
 // Main Lanyard Component
 export default function Lanyard({ 
-    position = [0, 0, 25], // Moved closer to camera
+    position = [0, 0, 25],
     gravity = [0, -40, 0], 
-    fov = 25, // Slightly wider field of view
+    fov = 25,
     transparent = true,
-    onTransitionComplete,
     onError,
-    isDarkMode
 }) {
     const [key, setKey] = useState(0);
     const [hasError, setHasError] = useState(false);
-   useEffect(() => {
+    
+    useEffect(() => {
         console.log('Lanyard MOUNTED, key:', key);
         return () => {
             console.log('Lanyard UNMOUNTING, key:', key);
         };
     }, [key]);
+    
     const handleContextLost = () => {
-      console.log('Context lost handler called');
+        console.log('Context lost handler called');
         setHasError(true);
         onError?.();
     };
@@ -350,7 +349,6 @@ export default function Lanyard({
                 }}
                 onCreated={({ gl, camera }) => {
                     gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
-                    // Better initial camera setup
                     camera.lookAt(0, 0, 0);
                 }}
                 onError={() => setHasError(true)}
@@ -396,4 +394,3 @@ export default function Lanyard({
         </div>
     );
 }
-

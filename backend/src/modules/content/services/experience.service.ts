@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Experience } from '../entities/experience.entity.js';
-import { CreateExperienceDto ,UpdateExperienceDto } from '../dto/index.js';
+import { CreateExperienceDto, UpdateExperienceDto } from '../dto/index.js';
 
 @Injectable()
 export class ExperienceService {
@@ -12,13 +12,15 @@ export class ExperienceService {
   ) {}
 
   async findAll(): Promise<Experience[]> {
-    return await this.experienceRepository.find({ 
-      order: { isCurrent: 'DESC', startDate: 'DESC' }
+    return await this.experienceRepository.find({
+      order: { isCurrent: 'DESC', startDate: 'DESC' },
     });
   }
 
   async findOne(id: number): Promise<Experience> {
-    const experience = await this.experienceRepository.findOne({ where: { id } });
+    const experience = await this.experienceRepository.findOne({
+      where: { id },
+    });
     if (!experience) {
       throw new NotFoundException(`Experience with ID ${id} not found`);
     }
@@ -30,7 +32,10 @@ export class ExperienceService {
     return await this.experienceRepository.save(experience);
   }
 
-  async update(id: number, updateExperienceDto: UpdateExperienceDto): Promise<Experience> {
+  async update(
+    id: number,
+    updateExperienceDto: UpdateExperienceDto,
+  ): Promise<Experience> {
     const experience = await this.findOne(id);
     Object.assign(experience, updateExperienceDto);
     return await this.experienceRepository.save(experience);

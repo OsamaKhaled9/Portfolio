@@ -1,4 +1,10 @@
-import { IsString, IsOptional, IsEmail, IsUrl, IsObject } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsEmail,
+  IsUrl,
+  IsObject,
+} from 'class-validator';
 
 export class UpdateProfileDto {
   // ✅ NEW: Name field

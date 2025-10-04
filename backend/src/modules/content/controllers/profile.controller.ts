@@ -39,7 +39,8 @@ export class ProfileController {
   @UseGuards(JwtAuthGuard)
   async updateProfile(@Body() updateProfileDto: UpdateProfileDto) {
     try {
-      const updatedProfile = await this.profileService.updateProfile(updateProfileDto);
+      const updatedProfile =
+        await this.profileService.updateProfile(updateProfileDto);
       return {
         success: true,
         data: updatedProfile,

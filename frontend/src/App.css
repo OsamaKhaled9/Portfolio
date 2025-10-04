@@ -1,7 +1,13 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  text-align: center;
+ width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+}
+.app-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .logo {

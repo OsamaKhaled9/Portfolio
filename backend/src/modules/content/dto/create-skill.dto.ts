@@ -6,7 +6,10 @@ export class CreateSkillDto {
 
   // ✅ ENHANCED: Fixed category options
   @IsIn(['Programming Languages', 'Frameworks & Tools', 'Cloud & Databases'])
-  category: 'Programming Languages' | 'Frameworks & Tools' | 'Cloud & Databases';
+  category:
+    | 'Programming Languages'
+    | 'Frameworks & Tools'
+    | 'Cloud & Databases';
 
   @IsOptional()
   @IsString()

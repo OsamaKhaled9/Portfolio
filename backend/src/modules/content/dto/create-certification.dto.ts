@@ -1,4 +1,11 @@
-import { IsString, IsOptional, IsDate, IsUrl, IsBoolean, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsDate,
+  IsUrl,
+  IsBoolean,
+  IsNumber,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateCertificationDto {
