@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Github, Linkedin, Mail, Phone, MessageSquare, X } from 'lucide-react';
+import { Github, Linkedin, Mail, Phone, MessageSquare, X } from '../../components/ui/Icons';
 import './Contact.css'; // Import the new CSS file
 import { personalInfo } from '../../data/personal';
 import { apiService } from '../../services/api';
@@ -71,8 +71,8 @@ const Contact = () => {
       } else {
         setSubmitStatus({ type: 'error', message: response.message || 'Failed to send message. Please try again.' });
       }
-    } catch (error) {
-      setSubmitStatus({ type: 'error', message: 'An error occurred. Please try again later.' });
+    } catch (error_) {
+      setSubmitStatus({ type: 'error', message: 'An error occurred. Please try again later.' ,error_ });
     } finally {
       setIsSubmitting(false);
     }
@@ -151,6 +151,8 @@ const Contact = () => {
           <button
             onClick={() => setIsDrawerOpen(false)}
             className="contact-drawer-close"
+            aria-label="Close contact form"
+            type="button"
           >
             <X size={18} />
           </button>

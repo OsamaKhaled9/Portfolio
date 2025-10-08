@@ -130,7 +130,7 @@
   align-items: center;
   text-align: center;
   background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-  color: white;
+  color: f3f4f6;
 }
 
 .project-card-title {
@@ -228,10 +228,17 @@
   transition: all 0.2s ease;
   border: none;
   user-select: none;
+  text-decoration: none; /* ✅ ADDED: Remove underline from <a> */
+  display: inline-block; /* ✅ ADDED: Make <a> behave like button */
 }
 
 .link-btn:hover {
   transform: translateY(-1px);
+  text-decoration: none; /* ✅ ADDED: No underline on hover */
+}
+.link-btn:focus {
+  outline: 2px solid var(--accent-primary); /* ✅ ADDED: Keyboard focus indicator */
+  outline-offset: 2px;
 }
 
 /* ✨ HIGH CONTRAST: Visible buttons */
@@ -275,7 +282,7 @@
 /* ✨ DEBUG: No links indicator */
 .no-links {
   font-size: 0.6rem;
-  color: #666;
+  color: #f3f4f6;
   font-style: italic;
 }
 

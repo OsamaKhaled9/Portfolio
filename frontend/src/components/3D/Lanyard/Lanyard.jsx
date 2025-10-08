@@ -12,6 +12,11 @@ import { cardGLB, lanyardTexture } from '../../../assets';
 // Extend geometries
 extend({ MeshLineGeometry, MeshLineMaterial });
 
+useGLTF.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+
+const isDev = import.meta.env.DEV;
+const log = isDev ? console.log : () => {};
+
 // WebGL Context Handler Component
 function WebGLContextManager({ children, onContextLost }) {
     const { gl } = useThree();
@@ -21,14 +26,14 @@ function WebGLContextManager({ children, onContextLost }) {
         const canvas = gl.domElement;
 
         const handleContextLost = (event) => {
-            console.log('WebGL context lost');
+            log('WebGL context lost');
             event.preventDefault();
             setContextLost(true);
             onContextLost();
         };
 
         const handleContextRestored = () => {
-            console.log('WebGL context restored');
+            log('WebGL context restored');
             setContextLost(false);
         };
 
@@ -306,14 +311,14 @@ export default function Lanyard({
     const [hasError, setHasError] = useState(false);
     
     useEffect(() => {
-        console.log('Lanyard MOUNTED, key:', key);
+        log('Lanyard MOUNTED, key:', key);
         return () => {
-            console.log('Lanyard UNMOUNTING, key:', key);
+            log('Lanyard UNMOUNTING, key:', key);
         };
     }, [key]);
     
     const handleContextLost = () => {
-        console.log('Context lost handler called');
+        log('Context lost handler called');
         setHasError(true);
         onError?.();
     };

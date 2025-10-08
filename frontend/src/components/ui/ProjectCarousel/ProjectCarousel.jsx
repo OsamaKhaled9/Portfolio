@@ -28,15 +28,10 @@ const ProjectCarousel = ({ projects, onProjectSelect }) => {
     }
   };
 
-  // ✨ SIMPLIFIED: Direct link handling
-  const handleLinkClick = (e, url) => {
-    e.preventDefault();
+  // ✅ FIXED: Use <a> tags instead of divs for better accessibility
+  const handleLinkClick = (e) => {
     e.stopPropagation();
-    if (url) {
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
   };
-
   const handleKeyDown = (e) => {
     if (e.key === 'ArrowLeft') {
       updateCarousel(currentIndex - 1);
@@ -72,7 +67,11 @@ const ProjectCarousel = ({ projects, onProjectSelect }) => {
   }, [currentIndex]);
 
   if (projects.length === 0) {
-    return <div>No projects available</div>;
+    return (
+      <div className="project-carousel-empty">
+        <p>No projects available</p>
+      </div>
+    );
   }
 
   const truncateText = (text, maxLength) => {
@@ -81,21 +80,28 @@ const ProjectCarousel = ({ projects, onProjectSelect }) => {
   };
 
   return (
-    <div className={`project-carousel ${isDarkMode ? 'dark' : 'light'}`}>
-      <h1 className="carousel-title">FEATURED PROJECTS</h1>
+    <section 
+      className={`project-carousel ${isDarkMode ? 'dark' : 'light'}`}
+      aria-label="Featured projects carousel"
+    >
+      {/* ✅ FIXED: h1 → h2 (assuming page has h1 elsewhere) */}
+      <h2 className="carousel-title">Featured Projects</h2>
 
       <div 
         className="carousel-container"
         ref={carouselRef}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
+        role="region"
+        aria-label="Project carousel"
       >
         <button 
           className="nav-arrow left"
           onClick={() => updateCarousel(currentIndex - 1)}
           aria-label="Previous project"
+          type="button"
         >
-          <span>‹</span>
+          <span aria-hidden="true">‹</span>
         </button>
 
         <div className="carousel-track">
@@ -110,52 +116,67 @@ const ProjectCarousel = ({ projects, onProjectSelect }) => {
             else if (offset === projects.length - 2) positionClass = 'left-2';
 
             return (
-              <div
+              <article
                 key={project.id}
                 className={`project-card ${positionClass}`}
                 onClick={() => handleCardClick(index)}
                 data-index={index}
+                aria-label={`Project: ${project.title}`}
               >
                 <div className="card-content">
                   {project.image ? (
                     <>
                       <div className="project-image">
-                        <img src={project.image} alt={project.title} />
+                        <img 
+                          src={project.image} 
+                          alt={`${project.title} preview`}
+                          loading="lazy"
+                          referrerPolicy="no-referrer"
+                        />
                       </div>
                       <div className="project-info">
+                        {/* ✅ FIXED: h3 is correct here (under h2) */}
                         <h3 className="project-card-title">
                           {truncateText(project.title, 30)}
                         </h3>
                         <p className="project-card-description">
                           {truncateText(project.description, 60)}
                         </p>
-                        <div className="project-tech">
+                        <div className="project-tech" aria-label="Technologies used">
                           {Array.isArray(project.tech) 
                             ? project.tech.slice(0, 2).join(' • ')
                             : project.tech || 'N/A'
                           }
                         </div>
-                        {/* ✨ SIMPLIFIED: Always visible links */}
-                        <div className="project-links">
+                        
+                        {/* ✅ FIXED: Use <a> tags with proper attributes */}
+                        <div className="project-links" role="group" aria-label="Project links">
                           {project.links?.github && (
-                            <div
+                            <a
+                              href={project.links.github}
+                              target="_blank"
+                              rel="noopener noreferrer"
                               className="link-btn github"
-                              onClick={(e) => handleLinkClick(e, project.links.github)}
+                              onClick={(e) => handleLinkClick(e)}
+                              aria-label={`View ${project.title} on GitHub`}
                             >
                               GitHub
-                            </div>
+                            </a>
                           )}
                           {project.links?.demo && (
-                            <div
+                            <a
+                              href={project.links.demo}
+                              target="_blank"
+                              rel="noopener noreferrer"
                               className="link-btn demo"
-                              onClick={(e) => handleLinkClick(e, project.links.demo)}
+                              onClick={(e) => handleLinkClick(e)}
+                              aria-label={`View ${project.title} demo`}
                             >
                               Demo
-                            </div>
+                            </a>
                           )}
-                          {/* ✨ DEBUG: Show if no links */}
                           {!project.links?.github && !project.links?.demo && (
-                            <div className="no-links">No Links</div>
+                            <span className="no-links" role="status">No Links</span>
                           )}
                         </div>
                       </div>
@@ -169,43 +190,51 @@ const ProjectCarousel = ({ projects, onProjectSelect }) => {
                         <p className="project-card-description">
                           {truncateText(project.description, 100)}
                         </p>
-                        <div className="project-tech">
+                        <div className="project-tech" aria-label="Technologies used">
                           {Array.isArray(project.tech) 
                             ? project.tech.slice(0, 3).join(' • ')
                             : project.tech || 'N/A'
                           }
                         </div>
-                        <div className="project-status">
+                        <div className="project-status" role="status">
                           {project.status || 'Completed'}
                         </div>
-                        {/* ✨ SIMPLIFIED: Always visible links */}
-                        <div className="project-links">
+                        
+                        {/* ✅ FIXED: Use <a> tags */}
+                        <div className="project-links" role="group" aria-label="Project links">
                           {project.links?.github && (
-                            <div
+                            <a
+                              href={project.links.github}
+                              target="_blank"
+                              rel="noopener noreferrer"
                               className="link-btn github"
-                              onClick={(e) => handleLinkClick(e, project.links.github)}
+                              onClick={(e) => handleLinkClick(e)}
+                              aria-label={`View ${project.title} on GitHub`}
                             >
                               GitHub
-                            </div>
+                            </a>
                           )}
                           {project.links?.demo && (
-                            <div
+                            <a
+                              href={project.links.demo}
+                              target="_blank"
+                              rel="noopener noreferrer"
                               className="link-btn demo"
-                              onClick={(e) => handleLinkClick(e, project.links.demo)}
+                              onClick={(e) => handleLinkClick(e)}
+                              aria-label={`View ${project.title} demo`}
                             >
                               Demo
-                            </div>
+                            </a>
                           )}
-                          {/* ✨ DEBUG: Show if no links */}
                           {!project.links?.github && !project.links?.demo && (
-                            <div className="no-links">No Links</div>
+                            <span className="no-links" role="status">No Links</span>
                           )}
                         </div>
                       </div>
                     </>
                   )}
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
@@ -214,18 +243,22 @@ const ProjectCarousel = ({ projects, onProjectSelect }) => {
           className="nav-arrow right"
           onClick={() => updateCarousel(currentIndex + 1)}
           aria-label="Next project"
+          type="button"
         >
-          <span>›</span>
+          <span aria-hidden="true">›</span>
         </button>
       </div>
 
-      <div className="carousel-dots">
-        {projects.map((_, index) => (
-          <div
+      <div className="carousel-dots" role="tablist" aria-label="Project indicators">
+        {projects.map((project, index) => (
+          <button
             key={index}
             className={`dot ${index === currentIndex ? 'active' : ''}`}
             onClick={() => updateCarousel(index)}
-            data-index={index}
+            role="tab"
+            aria-selected={index === currentIndex}
+            aria-label={`Go to project ${index + 1}: ${project.title}`}
+            type="button"
           />
         ))}
       </div>
@@ -233,7 +266,7 @@ const ProjectCarousel = ({ projects, onProjectSelect }) => {
       <p className="carousel-instruction">
         Click center card for details • Click links to open directly
       </p>
-    </div>
+    </section>
   );
 };
 

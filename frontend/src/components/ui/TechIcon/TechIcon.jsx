@@ -1,5 +1,5 @@
 import React from 'react';
-import { Monitor, Code, Database, Globe } from 'lucide-react';
+import { Monitor, Code, Database, Globe } from '../Icons';
 import { techIconStyles } from './TechIcon.styles';
 
 const iconMap = {

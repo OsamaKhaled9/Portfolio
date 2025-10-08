@@ -1,9 +1,30 @@
 import React, { Suspense, useState, useCallback, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown } from '../../components/ui/Icons';
 import { useTheme } from '../../context/ThemeContext';
-import Lanyard from '../../components/3D/Lanyard/Lanyard';
-import { apiService } from '../../services/api'; // ✅ Import API service
+import { apiService } from '../../services/api';
 import './PreHero.css';
+
+// ✅ Lazy load 3D component
+const Lanyard = React.lazy(() => import('../../components/3D/Lanyard/Lanyard'));
+
+// ✅ Import mobile version
+const PreHeroMobile = React.lazy(() => import('./PreHeroMobile'));
+
+const isMobileDevice = () => {
+  const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const result = isMobileUA || (isTouchDevice && window.innerWidth < 768);
+  
+  console.log('Device Detection:', {
+    userAgent: navigator.userAgent,
+    isMobileUA,
+    isTouchDevice,
+    width: window.innerWidth,
+    result
+  });
+  
+  return result;
+};
 
 // Keep all your existing components unchanged
 const LoadingSpinner = () => (
@@ -34,7 +55,7 @@ class SimpleErrorBoundary extends React.Component {
     this.state = { hasError: false, errorCount: 0 };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
 
@@ -68,12 +89,9 @@ class SimpleErrorBoundary extends React.Component {
 
 const PreHero = ({ onScrollToNext }) => {
   const { isDarkMode } = useTheme();
-  
-  // ✅ Add state for profile data
+  const [isMobile, setIsMobile] = useState(() => isMobileDevice());
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  
-  // Keep existing state
   const [lanyardKey, setLanyardKey] = useState(0);
   const [showFallback, setShowFallback] = useState(false);
 
@@ -87,7 +105,6 @@ const PreHero = ({ onScrollToNext }) => {
         }
       } catch (error) {
         console.error('Failed to load profile:', error);
-        // Fallback data
         setProfile({
           name: 'Osama Khaled',
           title: 'Full-Stack Developer'
@@ -100,7 +117,7 @@ const PreHero = ({ onScrollToNext }) => {
     fetchProfile();
   }, []);
 
-  // Keep all existing viewport logic
+  // Viewport fix
   useEffect(() => {
     const setVH = () => {
       const vh = window.innerHeight * 0.01;
@@ -117,7 +134,16 @@ const PreHero = ({ onScrollToNext }) => {
     };
   }, []);
 
-  // Keep all existing handlers unchanged
+  // Resize handler for mobile detection
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(isMobileDevice());
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleEnterPortfolio = useCallback(() => {
     const heroSection = document.getElementById('about');
     if (heroSection) {
@@ -132,7 +158,6 @@ const PreHero = ({ onScrollToNext }) => {
     }
   }, [onScrollToNext]);
 
-  
   const handleLanyardRetry = useCallback(() => {
     console.log('Retrying Lanyard component...');
     setLanyardKey(prev => prev + 1);
@@ -143,6 +168,15 @@ const PreHero = ({ onScrollToNext }) => {
     console.log('Lanyard component failed, showing fallback...');
     setShowFallback(true);
   }, []);
+
+  // ✅ Show mobile version without 3D
+  if (isMobile) {
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <PreHeroMobile onScrollToNext={onScrollToNext} />
+      </Suspense>
+    );
+  } // ✅ FIXED: Added closing brace here!
 
   // ✅ Show loading state
   if (loading) {
@@ -157,9 +191,9 @@ const PreHero = ({ onScrollToNext }) => {
     );
   }
 
+  // ✅ Desktop version with 3D
   return (
     <section id="prehero" className={`prehero-section ${isDarkMode ? 'dark' : 'light'}`}>
-      {/* Keep all existing 3D Canvas Layer unchanged */}
       <div className="canvas-layer">
         {!showFallback ? (
           <SimpleErrorBoundary 
@@ -184,10 +218,8 @@ const PreHero = ({ onScrollToNext }) => {
         )}
       </div>
 
-      {/* Content Layer with dynamic data */}
       <div className="content-layer">
         <div className="welcome-text">
-          {/* ✅ Use dynamic data instead of hardcoded text */}
           <h1 className="main-title">
             {profile?.name}
           </h1>
@@ -199,7 +231,6 @@ const PreHero = ({ onScrollToNext }) => {
           </p>
         </div>
 
-        {/* Keep existing enter button unchanged */}
         <div className="enter-button-container">
           <button
             className={`enter-button ${isDarkMode ? 'dark' : 'light'}`}

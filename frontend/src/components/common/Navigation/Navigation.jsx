@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X } from '../../ui/Icons';
 import { useActiveSection } from '../../../hooks/useActiveSection';
 import { smoothScrollTo } from '../../../utils/smoothScroll';
 import ThemeToggle from '../ThemeToggle';
@@ -11,7 +11,7 @@ const Navigation = ({
   isVisible = true
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [_isMobile, setIsMobile] = useState(false);
   const { activeSection, isScrolled } = useActiveSection(sections);
 
   // Check screen size

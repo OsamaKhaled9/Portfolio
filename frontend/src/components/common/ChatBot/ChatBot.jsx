@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MessageCircle, X, Send } from 'lucide-react';
+import { MessageCircle, X, Send } from '../../ui/Icons';
 import { useTheme } from '../../../context/ThemeContext';
 import './ChatBot.css';
 

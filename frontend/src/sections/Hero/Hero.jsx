@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown } from '../../components/ui/Icons';
 import TechIcon from '../../components/ui/TechIcon';
 import Button from '../../components/common/Button';
 import { useTheme } from '../../context/ThemeContext';

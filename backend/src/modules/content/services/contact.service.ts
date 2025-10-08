@@ -4,13 +4,7 @@ import { Repository } from 'typeorm';
 import { Contact } from '../entities/contact.entity.js';
 import { CreateContactDto } from '../dto/create-contact.dto.js';
 import { EmailService } from '../../email/email.service.js';
-
-/* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-assignment */
-const sanitizeHtml: (
-  text: string,
-  options?: any,
-) => string = require('sanitize-html');
-/* eslint-enable @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-assignment */
+import sanitizeHtml from 'sanitize-html';
 
 @Injectable()
 export class ContactService {
